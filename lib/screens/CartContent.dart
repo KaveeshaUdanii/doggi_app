@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 
-
-// Cart Page Content
-class CartContent extends StatelessWidget {
+// Cart Page Content (StatefulWidget)
+class CartContent extends StatefulWidget {
   const CartContent({Key? key}) : super(key: key);
 
+  @override
+  _CartContentState createState() => _CartContentState();
+}
+
+class _CartContentState extends State<CartContent> {
   @override
   Widget build(BuildContext context) {
     return Center(

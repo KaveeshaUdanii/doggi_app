@@ -37,6 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   animated_text_kit: ^4.2.2
   curved_navigation_bar: ^1.0.6
+  carousel_slider: ^4.0.0
 
 dev_dependencies:
   flutter_test:

@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 
-// Stories Page Content
-class StoriesContent extends StatelessWidget {
+
+// Stories Page Content (StatefulWidget)
+class StoriesContent extends StatefulWidget {
   const StoriesContent({Key? key}) : super(key: key);
 
+  @override
+  _StoriesContentState createState() => _StoriesContentState();
+}
+
+class _StoriesContentState extends State<StoriesContent> {
   @override
   Widget build(BuildContext context) {
     return Center(
