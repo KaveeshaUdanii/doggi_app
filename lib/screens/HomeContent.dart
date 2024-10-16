@@ -25,6 +25,8 @@ class _HomeContentState extends State<HomeContent> {
       Product(name: 'Beef Kibble', subtitle: 'Grain Free', price: 32.50, reviews: 4.5),
       Product(name: 'Chicken Kibble', subtitle: 'High Protein', price: 29.99, reviews: 5),
       Product(name: 'Chicken Kibble', subtitle: 'High Protein', price: 29.99, reviews: 5),
+      Product(name: 'Chicken Kibble', subtitle: 'High Protein', price: 29.99, reviews: 5),
+      Product(name: 'Chicken Kibble', subtitle: 'High Protein', price: 29.99, reviews: 5),
 
     ],
     'Canned Food': [
