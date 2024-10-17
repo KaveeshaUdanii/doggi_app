@@ -59,7 +59,7 @@ class _HomeContentState extends State<HomeContent> {
                     prefixIcon: Icon(Icons.search),
                     contentPadding: EdgeInsets.symmetric(vertical: 10.0),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
+                      borderRadius: BorderRadius.circular(45),
                       borderSide: BorderSide.none,
                     ),
                     fillColor: Colors.grey[200],
@@ -72,7 +72,7 @@ class _HomeContentState extends State<HomeContent> {
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(15),
+                  borderRadius: BorderRadius.circular(45),
                 ),
                 child: Icon(Icons.tune_rounded),
               ),
@@ -108,7 +108,7 @@ class _HomeContentState extends State<HomeContent> {
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
                     decoration: BoxDecoration(
                       color: isSelected ? Color(0xFFE5E0FF) : Color(0xFFFFD9F4),
-                      borderRadius: BorderRadius.circular(15),
+                      borderRadius: BorderRadius.circular(45),
                     ),
                     child: Row(
                       children: [

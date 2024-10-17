@@ -1,10 +1,10 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:doggi_app/screens/HomeContent.dart';
-import 'package:doggi_app/screens/CartContent.dart';
-import 'package:doggi_app/screens/StoriesContent.dart';
-import 'package:doggi_app/screens/FavoritesContent.dart';
-import 'package:doggi_app/screens/AccountContent.dart';
+import 'package:doggi_app/screens/Home/HomeContent.dart';
+import 'package:doggi_app/screens/Cart/CartContent.dart';
+import 'package:doggi_app/screens/Instructions/StoriesContent.dart';
+import 'package:doggi_app/screens/Favourite/FavoritesContent.dart';
+import 'package:doggi_app/screens/Account/AccountContent.dart';
 
 
 class HomePage extends StatefulWidget {
