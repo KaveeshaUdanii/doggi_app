@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:doggi_app/screens/Instructions/PetsContent.dart';
+import 'package:doggi_app/screens/Instructions/ArticlesContent.dart';
+import 'package:doggi_app/screens/Instructions/VideosContent.dart';
 
 
 // Stories Page Content (StatefulWidget)
@@ -24,12 +27,13 @@ class _StoriesContentState extends State<StoriesContent> {
               ],
             ),
             backgroundColor: Color(0xFF7286D3),
+            toolbarHeight: 30.0,
           ),
           body: const TabBarView(
             children: [
-              Icon(Icons.directions_car),
-              Icon(Icons.directions_transit),
-              Icon(Icons.directions_bike),
+              PetsContent(),
+              VideosContent(),
+              ArticlesContent(),
             ],
           ),
         ),

@@ -38,6 +38,8 @@ dependencies:
   animated_text_kit: ^4.2.2
   curved_navigation_bar: ^1.0.6
   carousel_slider: ^4.0.0
+  http: ^1.2.2
+  youtube_player_flutter: ^9.1.1
 
 dev_dependencies:
   flutter_test:
