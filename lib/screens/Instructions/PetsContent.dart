@@ -13,7 +13,8 @@ class _PetsContentState extends State<PetsContent> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: VideoListScreen(),
+      debugShowCheckedModeBanner: false,
+      //home: VideoListScreen(),
     );
   }
 }

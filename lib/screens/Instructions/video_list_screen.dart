@@ -20,9 +20,6 @@ class _VideoListScreenState extends State<VideoListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Dog Nutritional Videos'),
-      ),
       body: FutureBuilder<List<dynamic>>(
         future: _videos,
         builder: (context, snapshot) {
@@ -33,6 +30,7 @@ class _VideoListScreenState extends State<VideoListScreen> {
           } else {
             final videos = snapshot.data!;
             return ListView.builder(
+              padding: EdgeInsets.all(16.0),
               itemCount: videos.length,
               itemBuilder: (context, index) {
                 return VideoCard(videoData: videos[index]);
