@@ -40,6 +40,9 @@ dependencies:
   carousel_slider: ^4.0.0
   http: ^1.2.2
   youtube_player_flutter: ^9.1.1
+  firebase_core: ^3.6.0
+  cloud_firestore: ^5.4.4
+  firebase_auth: ^5.3.1
 #  url_launcher: ^6.3.1
 
 dev_dependencies:
@@ -72,6 +75,7 @@ flutter:
     - assets/tiktok.png
     - assets/whatsapp.png
     - assets/user_profile.jpg
+    - assets/welcome.gif
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

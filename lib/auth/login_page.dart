@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:doggi_app/screens/login_page.dart';
+import 'package:doggi_app/screens/Home_Page.dart';
+import '../screens/welcome.dart';
+import 'Signup_Page.dart';
+import '../auth/auth.dart';
 
-class SignupPageState extends StatefulWidget {
-  const SignupPageState({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
   @override
-  State<SignupPageState> createState() => _SignupPageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _SignupPageState extends State<SignupPageState> {
+class _LoginPageState extends State<LoginPage> {
   late Color myColor;
   late Size mediaSize;
-  TextEditingController NameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   bool rememberUser = false;
+
+  final AuthService _authService = AuthService();  // Auth service instance
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +26,7 @@ class _SignupPageState extends State<SignupPageState> {
     mediaSize = MediaQuery.of(context).size;
     return Container(
       decoration: BoxDecoration(
-        color:  Color(0xFF7286D3),
+        color: Color(0xFF7286D3),
         image: DecorationImage(
           image: const AssetImage("assets/girlD.jpeg"),
           fit: BoxFit.cover,
@@ -86,26 +90,23 @@ class _SignupPageState extends State<SignupPageState> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Create an Account",
+          "Welcome",
           style: TextStyle(
               color: Color(0xFF8EA7E9), fontSize: 32, fontWeight: FontWeight.w500),
         ),
-        _buildGreyText("Please Signup with your information"),
-        const SizedBox(height: 50),
-        _buildGreyText("Name"),
-        _buildInputField(NameController),
-        const SizedBox(height: 30),
+        _buildGreyText("Please login with your information"),
+        const SizedBox(height: 60),
         _buildGreyText("Email address"),
         _buildInputField(emailController),
-        const SizedBox(height: 30),
+        const SizedBox(height: 40),
         _buildGreyText("Password"),
         _buildInputField(passwordController, isPassword: true),
-        const SizedBox(height: 10),
+        const SizedBox(height: 20),
         _buildRememberForgot(),
-        const SizedBox(height: 10),
+        const SizedBox(height: 20),
         _buildLoginButton(),
         const SizedBox(height: 20),
-        _buildLogin(),
+        _buildSignup(),
       ],
     );
   }
@@ -152,20 +153,29 @@ class _SignupPageState extends State<SignupPageState> {
 
   Widget _buildLoginButton() {
     return ElevatedButton(
-      onPressed: () {
-        debugPrint("Name : ${NameController.text}");
-        debugPrint("Email : ${emailController.text}");
-        debugPrint("Password : ${passwordController.text}");
+      onPressed: () async {
+        final user = await _authService.signInWithEmail(
+            emailController.text.trim(), passwordController.text.trim());
+        if (user != null) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => welcome()),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Invalid email or password")),
+          );
+        }
       },
       style: ElevatedButton.styleFrom(
         shape: const StadiumBorder(),
-        backgroundColor:  Color(0xFF8EA7E9),
+        backgroundColor: Color(0xFF8EA7E9),
         elevation: 20,
         shadowColor: myColor,
         minimumSize: const Size.fromHeight(60),
       ),
       child: const Text(
-        "SIGNUP",
+        "LOGIN",
         style: TextStyle(
           color: Colors.white,
         ),
@@ -173,32 +183,25 @@ class _SignupPageState extends State<SignupPageState> {
     );
   }
 
-
-  Widget _buildLogin() {
+  Widget _buildSignup() {
     return Center(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center, // Center the items horizontally
+      child: Column(
         children: [
-          _buildGreyText("Go Back?"),
-          const SizedBox(width: 5), // Add spacing between the text
+          _buildGreyText("Don't have an account?"),
           GestureDetector(
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => LoginPage()),
+                MaterialPageRoute(builder: (context) => SignupPageState()),
               );
             },
             child: Text(
-              "Log in",
-              style: TextStyle(
-                color: Colors.deepPurple,
-                decoration: TextDecoration.underline,
-              ),
+              "Sign Up",
+              style: TextStyle(color: Colors.deepPurple, decoration: TextDecoration.underline),
             ),
           ),
         ],
       ),
     );
   }
-
 }

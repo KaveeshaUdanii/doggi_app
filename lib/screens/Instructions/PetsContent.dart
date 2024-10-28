@@ -1,4 +1,4 @@
-import 'package:doggi_app/screens/Instructions/video_list_screen.dart';
+import 'package:doggi_app/screens/Instructions/dog_breed_list_page.dart';
 import 'package:flutter/material.dart';
 
 
@@ -14,7 +14,7 @@ class _PetsContentState extends State<PetsContent> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      //home: VideoListScreen(),
+      home: DogBreedListPage(),
     );
   }
 }

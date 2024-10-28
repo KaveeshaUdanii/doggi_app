@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "301200602527",
+    "project_id": "doggi-app-403b4",
+    "storage_bucket": "doggi-app-403b4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:301200602527:android:210cf63089c9e676ca79aa",
+        "android_client_info": {
+          "package_name": "com.example.doggi_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAeil1Tw0dVXPpKBa2aVkkgGhUWk08nGEo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,3 +1,16 @@
+// Project-level build.gradle
+
+buildscript {
+    repositories {
+        google()  // Google's Maven repository
+        mavenCentral()  // Central Maven repository
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:7.0.0'  // Replace with the correct version if needed
+        classpath 'com.google.gms:google-services:4.4.2'  // Add the Google Services Gradle plugin
+    }
+}
+
 allprojects {
     repositories {
         google()

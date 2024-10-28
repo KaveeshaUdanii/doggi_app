@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:doggi_app/screens/Home_Page.dart';
-import 'package:doggi_app/screens/Signup_Page.dart';
+import 'login_page.dart';
+import '../auth/auth.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class SignupPageState extends StatefulWidget {
+  const SignupPageState({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<SignupPageState> createState() => _SignupPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _SignupPageState extends State<SignupPageState> {
   late Color myColor;
   late Size mediaSize;
+  TextEditingController NameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   bool rememberUser = false;
+
+  final AuthService _authService = AuthService();  // Auth service instance
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +25,7 @@ class _LoginPageState extends State<LoginPage> {
     mediaSize = MediaQuery.of(context).size;
     return Container(
       decoration: BoxDecoration(
-        color:  Color(0xFF7286D3),
+        color: Color(0xFF7286D3),
         image: DecorationImage(
           image: const AssetImage("assets/girlD.jpeg"),
           fit: BoxFit.cover,
@@ -86,23 +89,24 @@ class _LoginPageState extends State<LoginPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Welcome",
+          "Create Account",
           style: TextStyle(
               color: Color(0xFF8EA7E9), fontSize: 32, fontWeight: FontWeight.w500),
         ),
-        _buildGreyText("Please login with your information"),
+        _buildGreyText("Sign up to get started"),
         const SizedBox(height: 60),
+        _buildGreyText("Name"),
+        _buildInputField(NameController),
+        const SizedBox(height: 20),
         _buildGreyText("Email address"),
         _buildInputField(emailController),
         const SizedBox(height: 40),
         _buildGreyText("Password"),
         _buildInputField(passwordController, isPassword: true),
         const SizedBox(height: 20),
-        _buildRememberForgot(),
+        _buildSignupButton(),
         const SizedBox(height: 20),
-        _buildLoginButton(),
-        const SizedBox(height: 20),
-        _buildSignup(),
+        _buildLogin(),
       ],
     );
   }
@@ -125,48 +129,31 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _buildRememberForgot() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Row(
-          children: [
-            Checkbox(
-                value: rememberUser,
-                onChanged: (value) {
-                  setState(() {
-                    rememberUser = value!;
-                  });
-                }),
-            _buildGreyText("Remember me"),
-          ],
-        ),
-        TextButton(
-            onPressed: () {}, child: _buildGreyText("I forgot my password"))
-      ],
-    );
-  }
-
-  Widget _buildLoginButton() {
+  Widget _buildSignupButton() {
     return ElevatedButton(
-      onPressed: () {
-        debugPrint("Email : ${emailController.text}");
-        debugPrint("Password : ${passwordController.text}");
-
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => HomePage()),
-        );
+      onPressed: () async {
+        final user = await _authService.registerWithEmail(
+            emailController.text.trim(), passwordController.text.trim());
+        if (user != null) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => LoginPage()),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Failed to sign up")),
+          );
+        }
       },
       style: ElevatedButton.styleFrom(
         shape: const StadiumBorder(),
-        backgroundColor:  Color(0xFF8EA7E9),
+        backgroundColor: Color(0xFF8EA7E9),
         elevation: 20,
         shadowColor: myColor,
         minimumSize: const Size.fromHeight(60),
       ),
       child: const Text(
-        "LOGIN",
+        "SIGN UP",
         style: TextStyle(
           color: Colors.white,
         ),
@@ -174,34 +161,31 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _buildSignup() {
+  Widget _buildLogin() {
     return Center(
-      child: Column(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center, // Center the items horizontally
         children: [
-          _buildGreyText("Don't have an account?"),
+          _buildGreyText("Go Back?"),
+          const SizedBox(width: 5), // Add spacing between the text
           GestureDetector(
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => SignupPageState()),
+                MaterialPageRoute(builder: (context) => LoginPage()),
               );
             },
             child: Text(
-              "Sign Up",
-              style: TextStyle(color: Colors.deepPurple,decoration: TextDecoration.underline),
+              "Log in",
+              style: TextStyle(
+                color: Colors.deepPurple,
+                decoration: TextDecoration.underline,
+              ),
             ),
           ),
-          const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Tab(icon: Image.asset("assets/facebook.png")),
-              Tab(icon: Image.asset("assets/instagram.png")),
-              Tab(icon: Image.asset("assets/tiktok.png")),
-            ],
-          )
         ],
       ),
     );
   }
+
 }
