@@ -5,6 +5,7 @@ import 'package:doggi_app/screens/Cart/CartContent.dart';
 import 'package:doggi_app/screens/Instructions/StoriesContent.dart';
 import 'package:doggi_app/screens/Favourite/FavoritesContent.dart';
 import 'package:doggi_app/screens/Account/AccountContent.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 
 class HomePage extends StatefulWidget {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class HomeContent extends StatefulWidget {
   const HomeContent({Key? key}) : super(key: key);
@@ -9,40 +10,25 @@ class HomeContent extends StatefulWidget {
 
 class _HomeContentState extends State<HomeContent> {
   int selectedIndex = 0; // Keep track of the selected food category
+  late String selectedCategory;
 
   final List<Map<String, dynamic>> categories = [
-    {'name': 'Kibble', 'icon': Icons.pets, 'image': 'assets/sri_lankan_icon.png'},
-    {'name': 'Canned Food', 'icon': Icons.pets, 'image': 'assets/chinese_icon.png'},
-    {'name': 'Semi-Moist Food', 'icon': Icons.pets, 'image': 'assets/italian_icon.png'},
-    {'name': 'Home Cooked Food', 'icon': Icons.pets, 'image': 'assets/thai_icon.png'},
-    {'name': 'Raw Dog Food', 'icon': Icons.pets, 'image': 'assets/indian_icon.png'},
+    {'name': 'Kibble', 'icon': Icons.pets},
+    {'name': 'Canned Food', 'icon': Icons.pets},
+    {'name': 'Semi-Moist Food', 'icon': Icons.pets},
+    {'name': 'Home Cooked Food', 'icon': Icons.pets},
+    {'name': 'Raw Dog Food', 'icon': Icons.pets},
   ];
 
-  // Sample products data
-  final Map<String, List<Product>> products = {
-    'Kibble': [
-      Product(name: 'Chicken Kibble', subtitle: 'High Protein', price: 29.99, reviews: 5),
-      Product(name: 'Beef Kibble', subtitle: 'Grain Free', price: 32.50, reviews: 4.5),
-      Product(name: 'Chicken Kibble', subtitle: 'High Protein', price: 29.99, reviews: 5),
-      Product(name: 'Chicken Kibble', subtitle: 'High Protein', price: 29.99, reviews: 5),
-      Product(name: 'Chicken Kibble', subtitle: 'High Protein', price: 29.99, reviews: 5),
-      Product(name: 'Chicken Kibble', subtitle: 'High Protein', price: 29.99, reviews: 5),
-
-    ],
-    'Canned Food': [
-      Product(name: 'Chicken Canned Food', subtitle: 'With Vegetables', price: 24.99, reviews: 4.8),
-      Product(name: 'Fish Canned Food', subtitle: 'Rich in Omega-3', price: 22.50, reviews: 4.7),
-    ],
-    'Semi-Moist Food': [
-      Product(name: 'Beef Semi-Moist Food', subtitle: 'Tender and Juicy', price: 26.99, reviews: 4.6),
-      Product(name: 'Chicken Semi-Moist Food', subtitle: 'All Natural', price: 28.50, reviews: 4.5),
-    ],
-    // Add products for other categories similarly
-  };
+  @override
+  void initState() {
+    super.initState();
+    selectedCategory = categories[selectedIndex]['name'];
+  }
 
   @override
   Widget build(BuildContext context) {
-    String selectedCategory = categories[selectedIndex]['name'];
+    selectedCategory = categories[selectedIndex]['name'];
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
@@ -137,17 +123,51 @@ class _HomeContentState extends State<HomeContent> {
 
           // Product cards section
           Expanded(
-            child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing: 20.0,
-                crossAxisSpacing: 20.0,
-                childAspectRatio: 0.7,
-              ),
-              itemCount: products[selectedCategory]?.length ?? 0,
-              itemBuilder: (context, index) {
-                final product = products[selectedCategory]![index];
-                return ProductCard(product: product);
+            child: StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection('Food') // Replace 'Food' with your Firestore collection name
+                  .where('Category', isEqualTo: selectedCategory) // Filter by the selected category
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                }
+                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                  return Center(child: Text('No products available'));
+                }
+
+                final products = snapshot.data!.docs.map((doc) {
+                  final data = doc.data() as Map<String, dynamic>;
+
+                  // Extract the numeric price from the formatted string
+                  String priceString = data['Price'] ?? 'Rs. 0';
+                  double price = double.tryParse(priceString.replaceAll(RegExp(r'[^0-9.]'), '')) ?? 0.0;
+
+                  return Product(
+                    name: data['F_Name'] ?? 'No Name',
+                    subtitle: data['Description'] ?? 'No Subtitle',
+                    price: price, // Use the extracted numeric price
+                    reviews: (data['reviews'] ?? 0).toDouble(),
+                    imageUrl: data['image'] ?? '', // Ensure to retrieve the image URL
+                  );
+                }).toList();
+
+                return GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 20.0,
+                    crossAxisSpacing: 20.0,
+                    childAspectRatio: 0.7,
+                  ),
+                  itemCount: products.length,
+                  itemBuilder: (context, index) {
+                    final product = products[index];
+                    return ProductCard(product: product);
+                  },
+                );
               },
             ),
           ),
@@ -163,12 +183,14 @@ class Product {
   final String subtitle;
   final double price;
   final double reviews;
+  final String imageUrl; // New property for image URL
 
   Product({
     required this.name,
     required this.subtitle,
     required this.price,
     required this.reviews,
+    required this.imageUrl, // Initialize the new property
   });
 }
 
@@ -190,6 +212,17 @@ class ProductCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Product image
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Image.network(
+                product.imageUrl,
+                fit: BoxFit.cover,
+                height: 100,
+                width: double.infinity,
+              ),
+            ),
+            const SizedBox(height: 10),
             // Product name
             Text(
               product.name,
@@ -204,7 +237,7 @@ class ProductCard extends StatelessWidget {
             const SizedBox(height: 10),
             // Product price
             Text(
-              '\$${product.price.toStringAsFixed(2)}',
+              'Rs. ${product.price.toStringAsFixed(4)}', // Display the price with "Rs."
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
