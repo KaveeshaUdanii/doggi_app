@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class HomeContent extends StatefulWidget {
   const HomeContent({Key? key}) : super(key: key);
@@ -9,8 +10,10 @@ class HomeContent extends StatefulWidget {
 }
 
 class _HomeContentState extends State<HomeContent> {
-  int selectedIndex = 0; // Keep track of the selected food category
+  int selectedIndex = 0;
   late String selectedCategory;
+  final TextEditingController searchController = TextEditingController();
+  String searchQuery = '';
 
   final List<Map<String, dynamic>> categories = [
     {'name': 'Kibble', 'icon': Icons.pets},
@@ -40,6 +43,12 @@ class _HomeContentState extends State<HomeContent> {
             children: [
               Expanded(
                 child: TextField(
+                  controller: searchController,
+                  onChanged: (value) {
+                    setState(() {
+                      searchQuery = value.toLowerCase();
+                    });
+                  },
                   decoration: InputDecoration(
                     hintText: 'Search for Food',
                     prefixIcon: Icon(Icons.search),
@@ -87,6 +96,8 @@ class _HomeContentState extends State<HomeContent> {
                   onTap: () {
                     setState(() {
                       selectedIndex = index;
+                      searchQuery = ''; // Reset search on category change
+                      searchController.clear();
                     });
                   },
                   child: Container(
@@ -125,8 +136,8 @@ class _HomeContentState extends State<HomeContent> {
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
-                  .collection('Food') // Replace 'Food' with your Firestore collection name
-                  .where('Category', isEqualTo: selectedCategory) // Filter by the selected category
+                  .collection('Food')
+                  .where('Category', isEqualTo: selectedCategory)
                   .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -139,7 +150,12 @@ class _HomeContentState extends State<HomeContent> {
                   return Center(child: Text('No products available'));
                 }
 
-                final products = snapshot.data!.docs.map((doc) {
+                // Filter products based on search query
+                final products = snapshot.data!.docs.where((doc) {
+                  final data = doc.data() as Map<String, dynamic>;
+                  final name = data['F_Name']?.toString().toLowerCase() ?? '';
+                  return name.contains(searchQuery);
+                }).map((doc) {
                   final data = doc.data() as Map<String, dynamic>;
 
                   // Extract the numeric price from the formatted string
@@ -149,9 +165,9 @@ class _HomeContentState extends State<HomeContent> {
                   return Product(
                     name: data['F_Name'] ?? 'No Name',
                     subtitle: data['Description'] ?? 'No Subtitle',
-                    price: price, // Use the extracted numeric price
+                    price: price,
                     reviews: (data['reviews'] ?? 0).toDouble(),
-                    imageUrl: data['image'] ?? '', // Ensure to retrieve the image URL
+                    imageUrl: data['image'] ?? '',
                   );
                 }).toList();
 
@@ -183,14 +199,14 @@ class Product {
   final String subtitle;
   final double price;
   final double reviews;
-  final String imageUrl; // New property for image URL
+  final String imageUrl;
 
   Product({
     required this.name,
     required this.subtitle,
     required this.price,
     required this.reviews,
-    required this.imageUrl, // Initialize the new property
+    required this.imageUrl,
   });
 }
 
@@ -207,53 +223,108 @@ class ProductCard extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Product image
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Image.network(
-                product.imageUrl,
-                fit: BoxFit.cover,
-                height: 100,
-                width: double.infinity,
-              ),
-            ),
-            const SizedBox(height: 10),
-            // Product name
-            Text(
-              product.name,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 5),
-            // Product subtitle
-            Text(
-              product.subtitle,
-              style: const TextStyle(fontSize: 14, color: Colors.grey),
-            ),
-            const SizedBox(height: 10),
-            // Product price
-            Text(
-              'Rs. ${product.price.toStringAsFixed(4)}', // Display the price with "Rs."
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            // Customer reviews
-            Row(
+      child: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(Icons.star, color: Colors.amber, size: 16),
+                // Product image with favorite button
+                Stack(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.network(
+                        product.imageUrl,
+                        fit: BoxFit.cover,
+                        height: 100,
+                        width: double.infinity,
+                      ),
+                    ),
+                    Positioned(
+                      top: 8,
+                      right: 8,
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.favorite_border,
+                          color: Colors.red,
+                        ),
+                        onPressed: () {
+                          // Handle favorite button action
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                // Product name
                 Text(
-                  product.reviews.toString(),
-                  style: const TextStyle(fontSize: 14),
+                  product.name,
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 5),
+                // Product subtitle
+                Text(
+                  product.subtitle,
+                  style: const TextStyle(fontSize: 14, color: Colors.grey),
+                ),
+                const SizedBox(height: 10),
+                // Product price
+                Text(
+                  'Rs. ${product.price.toStringAsFixed(4)}',
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 10),
+                // Customer reviews
+                Row(
+                  children: [
+                    const Icon(Icons.star, color: Colors.amber, size: 16),
+                    Text(
+                      product.reviews.toString(),
+                      style: const TextStyle(fontSize: 14),
+                    ),
+                  ],
+                ),
+                const Spacer(),
+                // Add to Cart button centered at the bottom
+                Center(
+                  child: ElevatedButton.icon(
+                    onPressed: () async {
+                      // Handle add to cart action
+                      await addToCart(product.name);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Item added successfully!')),
+                      );
+                    },
+                    icon: Icon(Icons.shopping_cart),
+                    label: Text('Add to Cart'),
+                    style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
+  }
+
+  Future<void> addToCart(String itemName) async {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      // Save to Firestore in 'cart' collection
+      await FirebaseFirestore.instance.collection('cart').add({
+        'user_id': user.uid,
+        'item_name': itemName,
+        'timestamp': FieldValue.serverTimestamp(),
+      });
+    }
   }
 }
