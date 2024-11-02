@@ -211,10 +211,81 @@ class Product {
 }
 
 // ProductCard widget to display individual product details
-class ProductCard extends StatelessWidget {
+class ProductCard extends StatefulWidget {
   final Product product;
 
   const ProductCard({Key? key, required this.product}) : super(key: key);
+
+  @override
+  _ProductCardState createState() => _ProductCardState();
+}
+
+class _ProductCardState extends State<ProductCard> {
+  bool isFavorited = false; // Track if the product is favorited
+
+  @override
+  void initState() {
+    super.initState();
+    _checkIfFavorited();
+  }
+
+  Future<void> _checkIfFavorited() async {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      // Check Firestore to see if the product is already favorited by this user
+      final favoritesSnapshot = await FirebaseFirestore.instance
+          .collection('favorites')
+          .where('user_id', isEqualTo: user.uid)
+          .where('product_name', isEqualTo: widget.product.name)
+          .get();
+
+      setState(() {
+        isFavorited = favoritesSnapshot.docs.isNotEmpty; // Update the state based on the check
+      });
+    }
+  }
+
+  Future<void> _toggleFavorite() async {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      if (isFavorited) {
+        // Remove from favorites
+        final favoritesSnapshot = await FirebaseFirestore.instance
+            .collection('favorites')
+            .where('user_id', isEqualTo: user.uid)
+            .where('product_name', isEqualTo: widget.product.name)
+            .get();
+
+        for (var doc in favoritesSnapshot.docs) {
+          await doc.reference.delete(); // Delete the favorite entry
+        }
+      } else {
+        // Add to favorites
+        final foodSnapshot = await FirebaseFirestore.instance
+            .collection('Food')
+            .where('F_Name', isEqualTo: widget.product.name) // Assuming 'F_Name' is unique
+            .limit(1)
+            .get();
+
+        if (foodSnapshot.docs.isNotEmpty) {
+          final foodDocId = foodSnapshot.docs.first.id; // Get the document ID
+
+          await FirebaseFirestore.instance.collection('favorites').add({
+            'user_id': user.uid,
+            'product_name': widget.product.name,
+            'food_doc_id': foodDocId, // Add food document ID to favorites
+            'timestamp': FieldValue.serverTimestamp(),
+          });
+        }
+      }
+
+      setState(() {
+        isFavorited = !isFavorited; // Toggle the favorite state
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -223,91 +294,93 @@ class ProductCard extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
       ),
-      child: Stack(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Product image with favorite button
-                Stack(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Image.network(
-                        product.imageUrl,
-                        fit: BoxFit.cover,
-                        height: 100,
-                        width: double.infinity,
-                      ),
-                    ),
-                    Positioned(
-                      top: 8,
-                      right: 8,
-                      child: IconButton(
-                        icon: Icon(
-                          Icons.favorite_border,
-                          color: Colors.red,
-                        ),
-                        onPressed: () {
-                          // Handle favorite button action
-                        },
-                      ),
-                    ),
-                  ],
+          // Product image with favorite button
+          Stack(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.network(
+                  widget.product.imageUrl,
+                  fit: BoxFit.cover,
+                  height: 100,
+                  width: double.infinity,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      color: Colors.grey[300],
+                      height: 100,
+                      width: double.infinity,
+                      child: const Icon(Icons.error),
+                    );
+                  },
                 ),
-                const SizedBox(height: 10),
-                // Product name
-                Text(
-                  product.name,
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 5),
-                // Product subtitle
-                Text(
-                  product.subtitle,
-                  style: const TextStyle(fontSize: 14, color: Colors.grey),
-                ),
-                const SizedBox(height: 10),
-                // Product price
-                Text(
-                  'Rs. ${product.price.toStringAsFixed(4)}',
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 10),
-                // Customer reviews
-                Row(
-                  children: [
-                    const Icon(Icons.star, color: Colors.amber, size: 16),
-                    Text(
-                      product.reviews.toString(),
-                      style: const TextStyle(fontSize: 14),
-                    ),
-                  ],
-                ),
-                const Spacer(),
-                // Add to Cart button centered at the bottom
-                Center(
-                  child: ElevatedButton.icon(
-                    onPressed: () async {
-                      // Handle add to cart action
-                      await addToCart(product.name);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Item added successfully!')),
-                      );
-                    },
-                    icon: Icon(Icons.shopping_cart),
-                    label: Text('Add to Cart'),
-                    style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                    ),
+              ),
+              Positioned(
+                top: 8,
+                right: 8,
+                child: IconButton(
+                  icon: Icon(
+                    isFavorited ? Icons.favorite : Icons.favorite_border,
+                    color: Colors.red,
                   ),
+                  onPressed: _toggleFavorite, // Use the toggle function
                 ),
-              ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          // Product name
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Text(
+              widget.product.name,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          const SizedBox(height: 4),
+          // Product subtitle
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Text(
+              widget.product.subtitle,
+              style: const TextStyle(fontSize: 12, color: Colors.grey),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          const SizedBox(height: 8),
+          // Product price
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Text(
+              'Rs. ${widget.product.price.toStringAsFixed(2)}',
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+            ),
+          ),
+          const Spacer(), // Use Spacer to push the button to the bottom
+          // Add to Cart button centered at the bottom
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+            child: ElevatedButton.icon(
+              onPressed: () async {
+                await addToCart(widget.product.name);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Item added successfully!')),
+                );
+              },
+              icon: const Icon(Icons.shopping_cart, size: 16),
+              label: const Text('Add to Cart', style: TextStyle(fontSize: 14)),
+              style: ElevatedButton.styleFrom(
+                minimumSize: Size.fromHeight(32),
+                padding: EdgeInsets.zero,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              ),
             ),
           ),
         ],
