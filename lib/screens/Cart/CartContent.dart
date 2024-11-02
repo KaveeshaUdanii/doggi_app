@@ -154,7 +154,7 @@ class _CartPageState extends State<CartContent> {
                                 Text(
                                   "Rs. ${(item['price'] ?? 0).toDouble().toStringAsFixed(2)}",
                                   style: const TextStyle(
-                                      color: Colors.orange,
+                                      color: Colors.blue,
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold),
                                 ),
