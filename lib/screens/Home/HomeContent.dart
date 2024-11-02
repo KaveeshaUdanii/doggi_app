@@ -392,12 +392,24 @@ class _ProductCardState extends State<ProductCard> {
     final user = FirebaseAuth.instance.currentUser;
 
     if (user != null) {
-      // Save to Firestore in 'cart' collection
-      await FirebaseFirestore.instance.collection('cart').add({
-        'user_id': user.uid,
-        'item_name': itemName,
-        'timestamp': FieldValue.serverTimestamp(),
-      });
+      // Fetch the food document ID first
+      final foodSnapshot = await FirebaseFirestore.instance
+          .collection('Food')
+          .where('F_Name', isEqualTo: itemName) // Assuming 'F_Name' is unique
+          .limit(1)
+          .get();
+
+      if (foodSnapshot.docs.isNotEmpty) {
+        final foodDocId = foodSnapshot.docs.first.id; // Get the document ID
+
+        // Save to Firestore in 'cart' collection
+        await FirebaseFirestore.instance.collection('cart').add({
+          'user_id': user.uid,
+          'item_name': itemName,
+          'food_doc_id': foodDocId, // Save the food document ID
+          'timestamp': FieldValue.serverTimestamp(),
+        });
+      }
     }
   }
 }

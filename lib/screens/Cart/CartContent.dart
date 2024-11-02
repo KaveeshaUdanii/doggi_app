@@ -26,18 +26,37 @@ class _CartPageState extends State<CartContent> {
   Future<void> _fetchCartItems() async {
     final user = _auth.currentUser;
     if (user != null) {
-      final snapshot = await FirebaseFirestore.instance
+      final cartSnapshot = await FirebaseFirestore.instance
           .collection('cart')
           .where('user_id', isEqualTo: user.uid)
           .get();
 
+      List<Map<String, dynamic>> tempCartItems = [];
+      for (var doc in cartSnapshot.docs) {
+        var cartItem = {
+          'id': doc.id,
+          ...doc.data() as Map<String, dynamic>
+        };
+
+        // Fetch the corresponding food item from the food collection
+        final foodDoc = await FirebaseFirestore.instance
+            .collection('food')
+            .doc(cartItem['food_id']) // Assuming you have a field 'food_id' in cart
+            .get();
+
+        if (foodDoc.exists) {
+          var foodData = foodDoc.data() as Map<String, dynamic>;
+          cartItem['name'] = foodData['name']; // Replace No Name with the actual name
+          cartItem['imageUrl'] = foodData['imageUrl']; // Assuming there's an image URL
+        } else {
+          cartItem['name'] = 'No Name'; // Fallback if the food item doesn't exist
+        }
+
+        tempCartItems.add(cartItem);
+      }
+
       setState(() {
-        cartItems = snapshot.docs.map((doc) {
-          return {
-            'id': doc.id,
-            ...doc.data() as Map<String, dynamic>
-          };
-        }).toList();
+        cartItems = tempCartItems;
         _calculateSubtotal();
       });
     }
