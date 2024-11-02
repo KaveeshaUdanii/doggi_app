@@ -247,7 +247,7 @@ class _CartPageState extends State<CartContent> {
                   ),
                 ),
                 child: const Text(
-                  "Checkouttttt",
+                  "Checkout",
                   style: TextStyle(fontSize: 16),
                 ),
               ),
