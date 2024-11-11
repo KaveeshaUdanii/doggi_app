@@ -7,6 +7,7 @@ import 'package:doggi_app/screens/Favourite/FavoritesContent.dart';
 import 'package:doggi_app/screens/Account/AccountContent.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -32,7 +33,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     const HomeContent(),
     const CartContent(),
     const StoriesContent(),
-    const FavoritesContent(), // Ensure this is the correct FavoritesContent widget
+    const FavoritesContent(),
     const AccountContent(),
   ];
 
@@ -86,14 +87,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
               builder: (context, child) {
                 return Transform.translate(
                   offset: Offset(-250 * (1 - _controller.value), 0),
-                  child: Menu(
-                    controller: _controller,
-                    onTap: (index) {
-                      setState(() {
-                        _currentIndex = index; // Update the index when a menu item is tapped
-                      });
-                    },
-                  ),
+                  child: Menu(controller: _controller),
                 );
               },
             ),
@@ -114,14 +108,14 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   }
 }
 
+
 //-----------------------------------------------------------------------------------------------------------
 
 // Side Menu Widget
 class Menu extends StatelessWidget {
   final AnimationController controller;
-  final Function(int) onTap; // Add onTap parameter to the constructor
 
-  Menu({required this.controller, required this.onTap});
+  Menu({required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -153,8 +147,10 @@ class Menu extends StatelessWidget {
 
   Widget _buildStaggeredMenuItem(IconData icon, String title, int index) {
     return SlideTransition(
-      position: Tween<Offset>(begin: const Offset(-1, 0), end: Offset.zero)
-          .animate(CurvedAnimation(
+      position: Tween<Offset>(
+        begin: const Offset(-1, 0), // Start off-screen
+        end: Offset.zero, // End at original position
+      ).animate(CurvedAnimation(
         parent: controller,
         curve: Interval(
           0.1 * index, // Stagger each item
@@ -176,7 +172,7 @@ class Menu extends StatelessWidget {
           style: const TextStyle(color: Color(0xFFF2F2F2), fontSize: 18), // Text color
         ),
         onTap: () {
-          onTap(index); // Pass the index to the onTap callback
+          // Handle menu item tap here
         },
       ),
     );
