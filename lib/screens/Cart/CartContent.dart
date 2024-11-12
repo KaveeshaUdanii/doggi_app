@@ -48,6 +48,7 @@ class _CartPageState extends State<CartContent> {
           var foodData = foodDoc.data() as Map<String, dynamic>;
           cartItem['name'] = foodData['name']; // Replace No Name with the actual name
           cartItem['imageUrl'] = foodData['imageUrl']; // Assuming there's an image URL
+          cartItem['Price'] = foodData['Price'];
         } else {
           cartItem['name'] = 'No Name'; // Fallback if the food item doesn't exist
         }
@@ -65,7 +66,7 @@ class _CartPageState extends State<CartContent> {
   void _calculateSubtotal() {
     subtotal = 0;
     for (var item in cartItems) {
-      double itemPrice = (item['price'] ?? 0).toDouble();
+      double itemPrice = (item['Price'] ?? 0).toDouble();
       int itemQuantity = (item['quantity'] ?? 1).toInt();
       subtotal += itemPrice * itemQuantity;
     }
@@ -146,13 +147,13 @@ class _CartPageState extends State<CartContent> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  item['name'] ?? 'No Name',
+                                  item['F_name'] ?? 'No Name',
                                   style: const TextStyle(
                                       fontSize: 16, fontWeight: FontWeight.bold),
                                 ),
                                 const SizedBox(height: 5),
                                 Text(
-                                  "Rs. ${(item['price'] ?? 0).toDouble().toStringAsFixed(2)}",
+                                  "Rs. ${(item['Price'] ?? 0).toDouble().toStringAsFixed(2)}",
                                   style: const TextStyle(
                                       color: Colors.blue,
                                       fontSize: 14,

@@ -160,12 +160,12 @@ class _HomeContentState extends State<HomeContent> {
 
                   // Extract the numeric price from the formatted string
                   String priceString = data['Price'] ?? 'Rs. 0';
-                  double price = double.tryParse(priceString.replaceAll(RegExp(r'[^0-9.]'), '')) ?? 0.0;
+                  double Price = double.tryParse(priceString.replaceAll(RegExp(r'[^0-9.]'), '')) ?? 0.0;
 
                   return Product(
                     name: data['F_Name'] ?? 'No Name',
                     subtitle: data['Description'] ?? 'No Subtitle',
-                    price: price,
+                    price: Price,
                     reviews: (data['reviews'] ?? 0).toDouble(),
                     imageUrl: data['image'] ?? '',
                   );
@@ -388,14 +388,14 @@ class _ProductCardState extends State<ProductCard> {
     );
   }
 
-  Future<void> addToCart(String itemName) async {
+  Future<void> addToCart(String F_Name) async {
     final user = FirebaseAuth.instance.currentUser;
 
     if (user != null) {
       // Fetch the food document ID first
       final foodSnapshot = await FirebaseFirestore.instance
           .collection('Food')
-          .where('F_Name', isEqualTo: itemName) // Assuming 'F_Name' is unique
+          .where('F_Name', isEqualTo: F_Name) // Assuming 'F_Name' is unique
           .limit(1)
           .get();
 
@@ -405,7 +405,7 @@ class _ProductCardState extends State<ProductCard> {
         // Save to Firestore in 'cart' collection
         await FirebaseFirestore.instance.collection('cart').add({
           'user_id': user.uid,
-          'item_name': itemName,
+          'F_name': F_Name,
           'food_doc_id': foodDocId, // Save the food document ID
           'timestamp': FieldValue.serverTimestamp(),
         });
