@@ -310,7 +310,7 @@ class _ProductCardState extends State<ProductCard> {
                   errorBuilder: (context, error, stackTrace) {
                     return Container(
                       color: Colors.grey[300],
-                      height: 100,
+                      height: 95,
                       width: double.infinity,
                       child: const Icon(Icons.error),
                     );
@@ -364,7 +364,7 @@ class _ProductCardState extends State<ProductCard> {
           const Spacer(), // Use Spacer to push the button to the bottom
           // Add to Cart button centered at the bottom
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 0.1),
             child: ElevatedButton.icon(
               onPressed: () async {
                 await addToCart(widget.product.name);
