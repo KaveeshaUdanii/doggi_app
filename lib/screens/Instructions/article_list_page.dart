@@ -4,6 +4,8 @@ import 'package:doggi_app/services/article_service.dart';
 import 'package:flutter/material.dart';
 
 class ArticleListPage extends StatefulWidget {
+  const ArticleListPage({super.key});
+
   @override
   _ArticleListPageState createState() => _ArticleListPageState();
 }
@@ -20,16 +22,16 @@ class _ArticleListPageState extends State<ArticleListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Dog Food Articles')),
+      appBar: AppBar(title: const Text('Dog Food Articles')),
       body: FutureBuilder<List<Article>>(
         future: futureArticles,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No articles found.'));
+            return const Center(child: Text('No articles found.'));
           } else {
             List<Article> articles = snapshot.data!;
 
@@ -50,7 +52,7 @@ class _ArticleListPageState extends State<ArticleListPage> {
 class ArticleCard extends StatelessWidget {
   final Article article;
 
-  ArticleCard({required this.article});
+  const ArticleCard({super.key, required this.article});
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +68,7 @@ class ArticleCard extends StatelessWidget {
       },
       child: Card(
         elevation: 5,
-        margin: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15),
         ),
@@ -76,7 +78,7 @@ class ArticleCard extends StatelessWidget {
             // Display the image if available
             article.urlToImage != ''
                 ? ClipRRect(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
               child: Image.network(
                 article.urlToImage,
                 height: 200,
@@ -87,7 +89,7 @@ class ArticleCard extends StatelessWidget {
                 : Container(
               height: 200,
               color: Colors.grey[300],
-              child: Center(child: Text('No Image')),
+              child: const Center(child: Text('No Image')),
             ),
             Padding(
               padding: const EdgeInsets.all(10.0),
@@ -98,25 +100,25 @@ class ArticleCard extends StatelessWidget {
                     article.title,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Text(
                     'by ${article.author}',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 12,
                       color: Colors.grey,
                     ),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Text(
                     article.description,
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontSize: 14),
+                    style: const TextStyle(fontSize: 14),
                   ),
                 ],
               ),

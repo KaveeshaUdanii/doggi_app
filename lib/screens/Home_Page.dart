@@ -5,7 +5,6 @@ import 'package:doggi_app/screens/Cart/CartContent.dart';
 import 'package:doggi_app/screens/Instructions/StoriesContent.dart';
 import 'package:doggi_app/screens/Favourite/FavoritesContent.dart';
 import 'package:doggi_app/screens/Account/AccountContent.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -115,7 +114,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
 class Menu extends StatelessWidget {
   final AnimationController controller;
 
-  Menu({required this.controller});
+  const Menu({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -128,7 +127,7 @@ class Menu extends StatelessWidget {
           // User profile photo
           Container(
             margin: const EdgeInsets.symmetric(vertical: 30.0), // Adds space above and below
-            child: CircleAvatar(
+            child: const CircleAvatar(
               radius: 50, // Size of the avatar (you can adjust this)
               backgroundColor: Colors.white, // Background color for the circle
               backgroundImage: AssetImage('assets/user_profile.jpg'), // Add your image asset here

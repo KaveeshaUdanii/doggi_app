@@ -12,7 +12,7 @@ class PetsContent extends StatefulWidget {
 class _PetsContentState extends State<PetsContent> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
       home: DogBreedListPage(),
     );

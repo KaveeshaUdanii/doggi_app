@@ -12,6 +12,6 @@ class ArticlesContent extends StatefulWidget {
 class _ArticlesContentState extends State<ArticlesContent> {
   @override
   Widget build(BuildContext context) {
-    return ArticleListPage();
+    return const ArticleListPage();
   }
 }

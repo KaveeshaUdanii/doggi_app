@@ -6,7 +6,7 @@ import 'package:doggi_app/screens/Instructions/VideosContent.dart';
 
 // Stories Page Content (StatefulWidget)
 class StoriesContent extends StatefulWidget {
-  const StoriesContent({Key? key}) : super(key: key);
+  const StoriesContent({super.key});
 
   @override
   _StoriesContentState createState() => _StoriesContentState();
@@ -26,7 +26,7 @@ class _StoriesContentState extends State<StoriesContent> {
                 Tab(icon: Icon(Icons.article_rounded, color: Color(0xFFE5E0FF),)),
               ],
             ),
-            backgroundColor: Color(0xFF7286D3),
+            backgroundColor: const Color(0xFF7286D3),
             toolbarHeight: 30.0,
           ),
           body: const TabBarView(

@@ -38,7 +38,7 @@ class AppTheme {
         ),
       ),
       checkboxTheme: CheckboxThemeData(
-        fillColor: MaterialStateProperty.all(AppColors.primaryColor),
+        fillColor: WidgetStateProperty.all(AppColors.primaryColor),
       ),
     );
   }

@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'CheckoutPage.dart';
 
 class CartContent extends StatefulWidget {
-  const CartContent({Key? key}) : super(key: key);
+  const CartContent({super.key});
 
   @override
   _CartPageState createState() => _CartPageState();
@@ -37,7 +37,7 @@ class _CartPageState extends State<CartContent> {
       for (var doc in cartSnapshot.docs) {
         var cartItem = {
           'id': doc.id,
-          ...doc.data() as Map<String, dynamic>
+          ...doc.data()
         };
 
         // Fetch the corresponding food item from the food collection

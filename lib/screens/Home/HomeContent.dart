@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class HomeContent extends StatefulWidget {
-  const HomeContent({Key? key}) : super(key: key);
+  const HomeContent({super.key});
 
   @override
   _HomeContentState createState() => _HomeContentState();
@@ -51,8 +51,8 @@ class _HomeContentState extends State<HomeContent> {
                   },
                   decoration: InputDecoration(
                     hintText: 'Search for Food',
-                    prefixIcon: Icon(Icons.search),
-                    contentPadding: EdgeInsets.symmetric(vertical: 10.0),
+                    prefixIcon: const Icon(Icons.search),
+                    contentPadding: const EdgeInsets.symmetric(vertical: 10.0),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(45),
                       borderSide: BorderSide.none,
@@ -69,7 +69,7 @@ class _HomeContentState extends State<HomeContent> {
                   color: Colors.grey[200],
                   borderRadius: BorderRadius.circular(45),
                 ),
-                child: Icon(Icons.tune_rounded),
+                child: const Icon(Icons.tune_rounded),
               ),
             ],
           ),
@@ -104,21 +104,21 @@ class _HomeContentState extends State<HomeContent> {
                     margin: const EdgeInsets.only(right: 15),
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
                     decoration: BoxDecoration(
-                      color: isSelected ? Color(0xFFE5E0FF) : Color(0xFFFFD9F4),
+                      color: isSelected ? const Color(0xFFE5E0FF) : const Color(0xFFFFD9F4),
                       borderRadius: BorderRadius.circular(45),
                     ),
                     child: Row(
                       children: [
                         Icon(
                           category['icon'],
-                          color: isSelected ? Color(0xFF8EA7E9) : Color(0xFF7286D3),
+                          color: isSelected ? const Color(0xFF8EA7E9) : const Color(0xFF7286D3),
                         ),
                         const SizedBox(width: 8),
                         Text(
                           category['name'],
                           style: TextStyle(
                             fontSize: 16,
-                            color: isSelected ? Color(0xFF8EA7E9) : Color(0xFF7286D3),
+                            color: isSelected ? const Color(0xFF8EA7E9) : const Color(0xFF7286D3),
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -141,13 +141,13 @@ class _HomeContentState extends State<HomeContent> {
                   .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 }
                 if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 }
                 if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                  return Center(child: Text('No products available'));
+                  return const Center(child: Text('No products available'));
                 }
 
                 // Filter products based on search query
@@ -214,7 +214,7 @@ class Product {
 class ProductCard extends StatefulWidget {
   final Product product;
 
-  const ProductCard({Key? key, required this.product}) : super(key: key);
+  const ProductCard({super.key, required this.product});
 
   @override
   _ProductCardState createState() => _ProductCardState();
@@ -375,7 +375,7 @@ class _ProductCardState extends State<ProductCard> {
               icon: const Icon(Icons.shopping_cart, size: 16),
               label: const Text('Add to Cart', style: TextStyle(fontSize: 14)),
               style: ElevatedButton.styleFrom(
-                minimumSize: Size.fromHeight(32),
+                minimumSize: const Size.fromHeight(32),
                 padding: EdgeInsets.zero,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15),
@@ -388,14 +388,14 @@ class _ProductCardState extends State<ProductCard> {
     );
   }
 
-  Future<void> addToCart(String F_Name) async {
+  Future<void> addToCart(String fName) async {
     final user = FirebaseAuth.instance.currentUser;
 
     if (user != null) {
       // Fetch the food document ID first
       final foodSnapshot = await FirebaseFirestore.instance
           .collection('Food')
-          .where('F_Name', isEqualTo: F_Name) // Assuming 'F_Name' is unique
+          .where('F_Name', isEqualTo: fName) // Assuming 'F_Name' is unique
           .limit(1)
           .get();
 
@@ -405,7 +405,7 @@ class _ProductCardState extends State<ProductCard> {
         // Save to Firestore in 'cart' collection
         await FirebaseFirestore.instance.collection('cart').add({
           'user_id': user.uid,
-          'F_name': F_Name,
+          'F_name': fName,
           'food_doc_id': foodDocId, // Save the food document ID
           'timestamp': FieldValue.serverTimestamp(),
         });

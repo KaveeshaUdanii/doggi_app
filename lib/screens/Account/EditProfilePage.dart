@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class EditProfilePage extends StatefulWidget {
-  const EditProfilePage({Key? key}) : super(key: key);
+  const EditProfilePage({super.key});
 
   @override
   _EditProfilePageState createState() => _EditProfilePageState();
@@ -80,7 +80,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Edit Profile"),
-        backgroundColor: Color(0xFF7286D3),
+        backgroundColor: const Color(0xFF7286D3),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -137,8 +137,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
               ElevatedButton(
                 onPressed: _saveProfile,
                 style: ElevatedButton.styleFrom(
-                  minimumSize: Size.fromHeight(50),
-                  backgroundColor: Color(0xFF7286D3),
+                  minimumSize: const Size.fromHeight(50),
+                  backgroundColor: const Color(0xFF7286D3),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                 ),
                 child: const Text("Save Changes", style: TextStyle(fontSize: 18)),

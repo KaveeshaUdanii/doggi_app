@@ -39,13 +39,13 @@ class _welcomeState extends State<welcome> {
                   MaterialPageRoute(builder: (context) => const HomePage()),
                 );
               },
-              child: const Text("Get Started"),
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 14),
                 textStyle: const TextStyle(fontSize: 22),
-                backgroundColor: Color(0xFF8EA7E9),
+                backgroundColor: const Color(0xFF8EA7E9),
               ),
+              child: const Text("Get Started"),
             ),
           ],
         ),

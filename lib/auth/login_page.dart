@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:doggi_app/screens/Home_Page.dart';
 import '../screens/welcome.dart';
 import 'Signup_Page.dart';
 import '../auth/auth.dart';
@@ -26,7 +25,7 @@ class _LoginPageState extends State<LoginPage> {
     mediaSize = MediaQuery.of(context).size;
     return Container(
       decoration: BoxDecoration(
-        color: Color(0xFF7286D3),
+        color: const Color(0xFF7286D3),
         image: DecorationImage(
           image: const AssetImage("assets/girlD.jpeg"),
           fit: BoxFit.cover,
@@ -89,7 +88,7 @@ class _LoginPageState extends State<LoginPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           "Welcome",
           style: TextStyle(
               color: Color(0xFF8EA7E9), fontSize: 32, fontWeight: FontWeight.w500),
@@ -123,7 +122,7 @@ class _LoginPageState extends State<LoginPage> {
     return TextField(
       controller: controller,
       decoration: InputDecoration(
-        suffixIcon: isPassword ? Icon(Icons.remove_red_eye) : Icon(Icons.done),
+        suffixIcon: isPassword ? const Icon(Icons.remove_red_eye) : const Icon(Icons.done),
       ),
       obscureText: isPassword,
     );
@@ -159,17 +158,17 @@ class _LoginPageState extends State<LoginPage> {
         if (user != null) {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => welcome()),
+            MaterialPageRoute(builder: (context) => const welcome()),
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Invalid email or password")),
+            const SnackBar(content: Text("Invalid email or password")),
           );
         }
       },
       style: ElevatedButton.styleFrom(
         shape: const StadiumBorder(),
-        backgroundColor: Color(0xFF8EA7E9),
+        backgroundColor: const Color(0xFF8EA7E9),
         elevation: 20,
         shadowColor: myColor,
         minimumSize: const Size.fromHeight(60),
@@ -192,10 +191,10 @@ class _LoginPageState extends State<LoginPage> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => SignupPageState()),
+                MaterialPageRoute(builder: (context) => const SignupPageState()),
               );
             },
-            child: Text(
+            child: const Text(
               "Sign Up",
               style: TextStyle(color: Colors.deepPurple, decoration: TextDecoration.underline),
             ),

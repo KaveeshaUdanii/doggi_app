@@ -11,6 +11,6 @@ class VideosContent extends StatefulWidget {
 class _VideosContentState extends State<VideosContent> {
   @override
   Widget build(BuildContext context) {
-    return VideoListScreen();
+    return const VideoListScreen();
   }
 }

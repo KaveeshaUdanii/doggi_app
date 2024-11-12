@@ -10,7 +10,7 @@ import 'AccountInfoPage.dart';
 import 'EditProfilePage.dart';
 
 class AccountContent extends StatefulWidget {
-  const AccountContent({Key? key}) : super(key: key);
+  const AccountContent({super.key});
 
   @override
   _AccountContentState createState() => _AccountContentState();
@@ -189,7 +189,7 @@ class _AccountContentState extends State<AccountContent> {
                       radius: 50,
                       backgroundImage: userProfileUrl != null
                           ? NetworkImage(userProfileUrl!)
-                          : AssetImage('assets/profile_image.jpg') as ImageProvider,
+                          : const AssetImage('assets/profile_image.jpg') as ImageProvider,
                     ),
                     IconButton(
                       icon: const Icon(Icons.edit, color: Colors.white),

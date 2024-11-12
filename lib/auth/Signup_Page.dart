@@ -27,7 +27,7 @@ class _SignupPageState extends State<SignupPageState> {
     mediaSize = MediaQuery.of(context).size;
     return Container(
       decoration: BoxDecoration(
-        color: Color(0xFF7286D3),
+        color: const Color(0xFF7286D3),
         image: DecorationImage(
           image: const AssetImage("assets/girlD.jpeg"),
           fit: BoxFit.cover,
@@ -90,7 +90,7 @@ class _SignupPageState extends State<SignupPageState> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           "Create Account",
           style: TextStyle(
               color: Color(0xFF8EA7E9), fontSize: 32, fontWeight: FontWeight.w500),
@@ -125,7 +125,7 @@ class _SignupPageState extends State<SignupPageState> {
     return TextField(
       controller: controller,
       decoration: InputDecoration(
-        suffixIcon: isPassword ? Icon(Icons.remove_red_eye) : Icon(Icons.done),
+        suffixIcon: isPassword ? const Icon(Icons.remove_red_eye) : const Icon(Icons.done),
       ),
       obscureText: isPassword,
     );
@@ -141,17 +141,17 @@ class _SignupPageState extends State<SignupPageState> {
           _addUserDetails(user);
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => LoginPage()),
+            MaterialPageRoute(builder: (context) => const LoginPage()),
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Failed to sign up")),
+            const SnackBar(content: Text("Failed to sign up")),
           );
         }
       },
       style: ElevatedButton.styleFrom(
         shape: const StadiumBorder(),
-        backgroundColor: Color(0xFF8EA7E9),
+        backgroundColor: const Color(0xFF8EA7E9),
         elevation: 20,
         shadowColor: myColor,
         minimumSize: const Size.fromHeight(60),
@@ -176,10 +176,10 @@ class _SignupPageState extends State<SignupPageState> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => LoginPage()),
+                MaterialPageRoute(builder: (context) => const LoginPage()),
               );
             },
-            child: Text(
+            child: const Text(
               "Log in",
               style: TextStyle(
                 color: Colors.deepPurple,

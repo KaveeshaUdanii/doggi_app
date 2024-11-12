@@ -7,7 +7,7 @@ import '../Favourite/FavoritesContent.dart';
 class FoodDetailsPage extends StatefulWidget {
   final Product product;
 
-  const FoodDetailsPage({Key? key, required this.product}) : super(key: key);
+  const FoodDetailsPage({super.key, required this.product});
 
   @override
   _FoodDetailsPageState createState() => _FoodDetailsPageState();
@@ -40,9 +40,9 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
       appBar: AppBar(
         title: Text(
           widget.product.name,
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Color(0xFF7286D3),
+        backgroundColor: const Color(0xFF7286D3),
         elevation: 4.0, // Slight elevation for a floating effect
       ),
       body: Column(
@@ -78,7 +78,7 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
                     // Product name
                     Text(
                       widget.product.name,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 26,
                         fontWeight: FontWeight.w600,
                         color: Color(0xFF7286D3),
@@ -96,7 +96,7 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
                     // Delivery time
                     Row(
                       children: [
-                        Icon(Icons.access_time, color: Color(0xFF8EA7E9)),
+                        const Icon(Icons.access_time, color: Color(0xFF8EA7E9)),
                         const SizedBox(width: 4),
                         Text(
                           'Delivery Time: 30 min', // Hardcoded delivery time in design
@@ -109,7 +109,7 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
                     // Price
                     Text(
                       '\$${widget.product.price.toStringAsFixed(2)}',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
                         color: Color(0xFF7286D3),
@@ -121,15 +121,15 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
                     Row(
                       children: [
                         IconButton(
-                          icon: Icon(Icons.remove, color: Color(0xFF8EA7E9)),
+                          icon: const Icon(Icons.remove, color: Color(0xFF8EA7E9)),
                           onPressed: decreaseQuantity,
                         ),
                         Text(
                           '$quantity', // Dynamic quantity display
-                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
                         ),
                         IconButton(
-                          icon: Icon(Icons.add, color: Color(0xFF8EA7E9)),
+                          icon: const Icon(Icons.add, color: Color(0xFF8EA7E9)),
                           onPressed: increaseQuantity,
                         ),
                       ],
@@ -139,7 +139,7 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
                     // Total Price
                     Text(
                       'Total: \$${totalPrice.toStringAsFixed(2)}', // Display total price
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
                         color: Color(0xFF7286D3),
@@ -167,7 +167,7 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
                   },
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Color(0xFF7286D3), // Button color
+                      color: const Color(0xFF8EA7E9), // Button color
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
@@ -177,8 +177,8 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
                         ),
                       ],
                     ),
-                    padding: EdgeInsets.all(16),
-                    child: Icon(
+                    padding: const EdgeInsets.all(16),
+                    child: const Icon(
                       Icons.shopping_cart,
                       color: Colors.white,
                       size: 30,
@@ -195,14 +195,14 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
                     );
                   },
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Color(0xFF7286D3)),
-                    padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 16, horizontal: 70)),
-                    shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                    backgroundColor: WidgetStateProperty.all(const Color(0xFF7286D3)),
+                    padding: WidgetStateProperty.all(const EdgeInsets.symmetric(vertical: 16, horizontal: 60)),
+                    shape: WidgetStateProperty.all(RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(40), // Rounded button
                     )),
-                    elevation: MaterialStateProperty.all(4), // Light shadow effect
+                    elevation: WidgetStateProperty.all(4), // Light shadow effect
                   ),
-                  child: Text(
+                  child: const Text(
                     'Buy Now',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white),
                   ),
@@ -215,14 +215,14 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
     );
   }
 
-  Future<void> addToCart(String F_Name) async {
+  Future<void> addToCart(String fName) async {
     final user = FirebaseAuth.instance.currentUser;
 
     if (user != null) {
       // Fetch the food document ID first
       final foodSnapshot = await FirebaseFirestore.instance
           .collection('Food')
-          .where('F_Name', isEqualTo: F_Name) // Assuming 'F_Name' is unique
+          .where('F_Name', isEqualTo: fName) // Assuming 'F_Name' is unique
           .limit(1)
           .get();
 
@@ -232,12 +232,11 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
         // Save to Firestore in 'cart' collection
         await FirebaseFirestore.instance.collection('cart').add({
           'user_id': user.uid,
-          'F_name': F_Name,
+          'F_name': fName,
           'food_doc_id': foodDocId, // Save the food document ID
           'timestamp': FieldValue.serverTimestamp(),
         });
       }
     }
   }
-
 }

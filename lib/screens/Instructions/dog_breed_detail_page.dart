@@ -4,7 +4,7 @@ import 'package:doggi_app/models/dog_breed.dart';
 class DogBreedDetailPage extends StatelessWidget {
   final DogBreed breed;
 
-  DogBreedDetailPage({required this.breed});
+  const DogBreedDetailPage({super.key, required this.breed});
 
   @override
   Widget build(BuildContext context) {
@@ -22,25 +22,25 @@ class DogBreedDetailPage extends StatelessWidget {
                 : Container(
               height: 200,
               color: Colors.grey[300],
-              child: Center(child: Text('No Image')),
+              child: const Center(child: Text('No Image')),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
               breed.name,
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               'Temperament: ${breed.temperament}',
-              style: TextStyle(fontSize: 16),
+              style: const TextStyle(fontSize: 16),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               'Lifespan: ${breed.lifeSpan}',
-              style: TextStyle(fontSize: 16),
+              style: const TextStyle(fontSize: 16),
             ),
-            SizedBox(height: 16),
-            Text(
+            const SizedBox(height: 16),
+            const Text(
               'More detailed information about this breed can be added here...',
               style: TextStyle(fontSize: 16),
             ),

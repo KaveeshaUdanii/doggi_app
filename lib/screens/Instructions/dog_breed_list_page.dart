@@ -4,6 +4,8 @@ import 'package:doggi_app/models/dog_breed.dart';
 import 'package:doggi_app/services/dog_breed_service.dart';
 
 class DogBreedListPage extends StatefulWidget {
+  const DogBreedListPage({super.key});
+
   @override
   _DogBreedListPageState createState() => _DogBreedListPageState();
 }
@@ -20,16 +22,16 @@ class _DogBreedListPageState extends State<DogBreedListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Dog Breeds')),
+      appBar: AppBar(title: const Text('Dog Breeds')),
       body: FutureBuilder<List<DogBreed>>(
         future: futureDogBreeds,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No breeds found.'));
+            return const Center(child: Text('No breeds found.'));
           } else {
             List<DogBreed> breeds = snapshot.data!;
 
@@ -49,7 +51,7 @@ class _DogBreedListPageState extends State<DogBreedListPage> {
 class DogBreedCard extends StatelessWidget {
   final DogBreed breed;
 
-  DogBreedCard({required this.breed});
+  const DogBreedCard({super.key, required this.breed});
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +64,7 @@ class DogBreedCard extends StatelessWidget {
       },
       child: Card(
         elevation: 5,
-        margin: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15),
         ),
@@ -71,7 +73,7 @@ class DogBreedCard extends StatelessWidget {
           children: [
             breed.imageUrl != ''
                 ? ClipRRect(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
               child: Image.network(
                 breed.imageUrl,
                 height: 200,
@@ -82,7 +84,7 @@ class DogBreedCard extends StatelessWidget {
                 : Container(
               height: 200,
               color: Colors.grey[300],
-              child: Center(child: Text('No Image')),
+              child: const Center(child: Text('No Image')),
             ),
             Padding(
               padding: const EdgeInsets.all(10.0),
@@ -93,23 +95,23 @@ class DogBreedCard extends StatelessWidget {
                     breed.name,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Text(
                     'Temperament: ${breed.temperament}',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 14,
                       color: Colors.grey,
                     ),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Text(
                     'Lifespan: ${breed.lifeSpan}',
-                    style: TextStyle(fontSize: 14),
+                    style: const TextStyle(fontSize: 14),
                   ),
                 ],
               ),

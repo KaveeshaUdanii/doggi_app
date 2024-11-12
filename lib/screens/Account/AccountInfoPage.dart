@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AccountInfoPage extends StatefulWidget {
-  const AccountInfoPage({Key? key}) : super(key: key);
+  const AccountInfoPage({super.key});
 
   @override
   _AccountInfoPageState createState() => _AccountInfoPageState();
@@ -74,9 +74,9 @@ class _AccountInfoPageState extends State<AccountInfoPage> {
   Widget _buildProfileHeader() {
     return Container(
       decoration: BoxDecoration(
-        color: Color(0xFF8EA7E9),
+        color: const Color(0xFF8EA7E9),
         borderRadius: BorderRadius.circular(20),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: Colors.black26,
             offset: Offset(0, 4),

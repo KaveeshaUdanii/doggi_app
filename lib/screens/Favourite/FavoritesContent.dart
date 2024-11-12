@@ -6,7 +6,7 @@ import '../Home/FoodDetailsPage.dart';
 
 // Favorites Page Content (StatefulWidget)
 class FavoritesContent extends StatefulWidget {
-  const FavoritesContent({Key? key}) : super(key: key);
+  const FavoritesContent({super.key});
 
   @override
   _FavoritesContentState createState() => _FavoritesContentState();
@@ -21,9 +21,9 @@ class _FavoritesContentState extends State<FavoritesContent> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Title for the Favorites page
-          Text(
+          const Text(
             "Favorites",
-            style: TextStyle(fontSize: 28, color: const Color(0xFF7286D3)),
+            style: TextStyle(fontSize: 28, color: Color(0xFF7286D3)),
           ),
           const SizedBox(height: 20),
 
@@ -36,13 +36,13 @@ class _FavoritesContentState extends State<FavoritesContent> {
                   .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 }
                 if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 }
                 if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                  return Center(child: Text('No favorites found'));
+                  return const Center(child: Text('No favorites found'));
                 }
 
                 // Fetching product details for each favorite
@@ -50,7 +50,7 @@ class _FavoritesContentState extends State<FavoritesContent> {
                   future: _fetchFavoriteProducts(snapshot.data!.docs),
                   builder: (context, foodSnapshot) {
                     if (foodSnapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
+                      return const Center(child: CircularProgressIndicator());
                     }
                     if (foodSnapshot.hasError) {
                       return Center(child: Text('Error: ${foodSnapshot.error}'));
@@ -132,7 +132,7 @@ class Product {
 class ProductCard extends StatelessWidget {
   final Product product;
 
-  const ProductCard({Key? key, required this.product}) : super(key: key);
+  const ProductCard({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
@@ -208,7 +208,7 @@ class ProductCard extends StatelessWidget {
 
               // Heart icon button at the end of the row (remove from favorites)
               IconButton(
-                icon: Icon(Icons.favorite, color: Colors.redAccent),
+                icon: const Icon(Icons.favorite, color: Colors.redAccent),
                 onPressed: () async {
                   // Call the function to remove the product from Firestore
                   await _removeFromFavorites(product);

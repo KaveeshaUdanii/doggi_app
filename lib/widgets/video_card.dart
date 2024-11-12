@@ -4,7 +4,7 @@ import 'package:doggi_app/screens/Instructions/video_player_screen.dart';
 class VideoCard extends StatelessWidget {
   final dynamic videoData;
 
-  const VideoCard({Key? key, required this.videoData}) : super(key: key);
+  const VideoCard({super.key, required this.videoData});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class VideoCard extends StatelessWidget {
       child: ListTile(
         leading: Image.network(videoThumbnailUrl),
         title: Text(videoTitle),
-        trailing: Icon(Icons.play_arrow),
+        trailing: const Icon(Icons.play_arrow),
         onTap: () {
           Navigator.push(
             context,
