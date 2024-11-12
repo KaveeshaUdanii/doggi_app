@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'ProductDetailPage.dart';
-
 class HomeContent extends StatefulWidget {
   const HomeContent({Key? key}) : super(key: key);
 
@@ -223,9 +221,7 @@ class ProductCard extends StatefulWidget {
 }
 
 class _ProductCardState extends State<ProductCard> {
-  bool isFavorited = false;
-
-  get food_doc_id => null; // Track if the product is favorited
+  bool isFavorited = false; // Track if the product is favorited
 
   @override
   void initState() {
@@ -370,17 +366,14 @@ class _ProductCardState extends State<ProductCard> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
             child: ElevatedButton.icon(
-              onPressed: () {
-                // Navigate to the product detail page
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ProductDetailPage(productId: food_doc_id), // Pass the product id or name
-                  ),
+              onPressed: () async {
+                await addToCart(widget.product.name);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Item added successfully!')),
                 );
               },
               icon: const Icon(Icons.shopping_cart, size: 16),
-              label: const Text('View Product', style: TextStyle(fontSize: 14)),
+              label: const Text('Add to Cart', style: TextStyle(fontSize: 14)),
               style: ElevatedButton.styleFrom(
                 minimumSize: Size.fromHeight(32),
                 padding: EdgeInsets.zero,
