@@ -170,7 +170,7 @@ class _AccountContentState extends State<AccountContent> {
       body: Column(
         children: [
           Container(
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 130),
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 155),
             decoration: const BoxDecoration(
               color: Color(0xFF7286D3),
               borderRadius: BorderRadius.only(
