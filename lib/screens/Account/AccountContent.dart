@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:io';
 import '../../auth/login_page.dart';
+import 'EditProfilePage.dart';
 
 class AccountContent extends StatefulWidget {
   const AccountContent({Key? key}) : super(key: key);
@@ -223,7 +224,11 @@ class _AccountContentState extends State<AccountContent> {
                   _buildOptionCard(
                     icon: Icons.person_outline,
                     text: "Edit Profile",
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const EditProfilePage()),
+                    );},
                   ),
                   _buildOptionCard(
                     icon: Icons.shopping_bag_outlined,
