@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:io';
 import '../../auth/login_page.dart';
+import 'AccountInfoPage.dart';
 import 'EditProfilePage.dart';
 
 class AccountContent extends StatefulWidget {
@@ -243,7 +244,12 @@ class _AccountContentState extends State<AccountContent> {
                   _buildOptionCard(
                     icon: Icons.info_outline,
                     text: "Account Info",
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const AccountInfoPage()),
+                      );
+                    },
                   ),
                   const Divider(height: 30),
                   _buildOptionCard(
