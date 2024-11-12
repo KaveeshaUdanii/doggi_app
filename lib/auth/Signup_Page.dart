@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'login_page.dart';
 import '../auth/auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SignupPageState extends StatefulWidget {
   const SignupPageState({super.key});
@@ -135,6 +137,8 @@ class _SignupPageState extends State<SignupPageState> {
         final user = await _authService.registerWithEmail(
             emailController.text.trim(), passwordController.text.trim());
         if (user != null) {
+          // Add user details to Firestore
+          _addUserDetails(user);
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => LoginPage()),
@@ -188,4 +192,18 @@ class _SignupPageState extends State<SignupPageState> {
     );
   }
 
+  // Function to add user details to Firestore
+  Future<void> _addUserDetails(User user) async {
+    try {
+      // Add user details to 'UserDetails' collection in Firestore
+      await FirebaseFirestore.instance.collection('UserDetails').doc(user.uid).set({
+        'uid': user.uid,  // Store UID
+        'name': NameController.text.trim(),
+        'email': emailController.text.trim(),
+        'createdAt': FieldValue.serverTimestamp(), // Timestamp for when the account was created
+      });
+    } catch (e) {
+      print("Error adding user details: $e");
+    }
+  }
 }
