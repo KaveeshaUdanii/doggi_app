@@ -48,7 +48,12 @@ class _CartPageState extends State<CartContent> {
           var foodData = foodDoc.data() as Map<String, dynamic>;
           cartItem['name'] = foodData['name']; // Replace No Name with the actual name
           cartItem['imageUrl'] = foodData['imageUrl']; // Assuming there's an image URL
-          cartItem['Price'] = foodData['Price'];
+
+          // Convert price string to numeric value
+          String priceString = foodData['Price'] ?? '0';
+          double priceValue = _parsePrice(priceString);
+          cartItem['Price'] = priceValue;
+
         } else {
           cartItem['name'] = 'No Name'; // Fallback if the food item doesn't exist
         }
@@ -62,6 +67,14 @@ class _CartPageState extends State<CartContent> {
       });
     }
   }
+
+  double _parsePrice(String Price) {
+    // Remove currency symbols (Rs., $, etc.), commas, and any extra spaces
+    Price = Price.replaceAll(RegExp(r'[^\d.]'), '');
+    // Try parsing the string to a double
+    return double.tryParse(Price) ?? 0.0;
+  }
+
 
   void _calculateSubtotal() {
     subtotal = 0;
