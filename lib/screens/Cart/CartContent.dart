@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import 'CheckoutPage.dart';
+
 class CartContent extends StatefulWidget {
   const CartContent({Key? key}) : super(key: key);
 
@@ -252,7 +254,10 @@ class _CartPageState extends State<CartContent> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  // Handle checkout action here
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const CheckoutPage()),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 15),
