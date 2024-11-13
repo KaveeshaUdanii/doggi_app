@@ -1,11 +1,13 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:doggi_app/screens/Home/HomeContent.dart';
 import 'package:doggi_app/screens/Cart/CartContent.dart';
 import 'package:doggi_app/screens/Instructions/StoriesContent.dart';
 import 'package:doggi_app/screens/Favourite/FavoritesContent.dart';
 import 'package:doggi_app/screens/Account/AccountContent.dart';
-
+import '../auth/login_page.dart';
+import 'Home/ContactUsPage.dart'; // Import the Contact Us page
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -33,7 +35,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     const CartContent(),
     const StoriesContent(),
     const FavoritesContent(),
-    const AccountContent(),
+    //const AccountContent(),
   ];
 
   @override
@@ -107,7 +109,6 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   }
 }
 
-
 //-----------------------------------------------------------------------------------------------------------
 
 // Side Menu Widget
@@ -115,6 +116,24 @@ class Menu extends StatelessWidget {
   final AnimationController controller;
 
   const Menu({super.key, required this.controller});
+
+  // Logout method using Firebase Authentication
+  Future<void> _logout(BuildContext context) async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Successfully logged out")),
+      );
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const LoginPage()),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error logging out: $e")),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -134,17 +153,17 @@ class Menu extends StatelessWidget {
             ),
           ),
           // Menu items
-          _buildStaggeredMenuItem(Icons.home, "Home", 0),
-          _buildStaggeredMenuItem(Icons.favorite, "Favorite", 1),
-          _buildStaggeredMenuItem(Icons.pets, "Dog Nutrition", 2),
-          _buildStaggeredMenuItem(Icons.contact_page, "Contact Us", 3),
-          _buildStaggeredMenuItem(Icons.exit_to_app, "Logout", 4),
+          _buildStaggeredMenuItem(context, Icons.account_circle_rounded, "My Profile", 0),
+          _buildStaggeredMenuItem(context, Icons.shopping_bag_outlined, "My Orders", 1),
+          _buildStaggeredMenuItem(context, Icons.discount, "Promotions", 2),
+          _buildStaggeredMenuItem(context, Icons.contact_page, "Contact Us", 3),
+          _buildStaggeredMenuItem(context, Icons.exit_to_app, "Logout", 4),
         ],
       ),
     );
   }
 
-  Widget _buildStaggeredMenuItem(IconData icon, String title, int index) {
+  Widget _buildStaggeredMenuItem(BuildContext context, IconData icon, String title, int index) {
     return SlideTransition(
       position: Tween<Offset>(
         begin: const Offset(-1, 0), // Start off-screen
@@ -171,7 +190,16 @@ class Menu extends StatelessWidget {
           style: const TextStyle(color: Color(0xFFF2F2F2), fontSize: 18), // Text color
         ),
         onTap: () {
-          // Handle menu item tap here
+          if (title == "Contact Us") {
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(builder: (context) => ContactUsPage()),
+            // );
+          } else if (title == "Logout") {
+            // Call the logout method
+            _logout(context);
+          }
+          // Handle other menu item taps here if needed
         },
       ),
     );
