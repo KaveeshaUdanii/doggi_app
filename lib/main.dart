@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'auth/login_page.dart';
-
+import 'package:google_fonts/google_fonts.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,7 +18,9 @@ class MyApp extends StatelessWidget{
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "Flutter Demo",
-      theme: ThemeData(primarySwatch: Colors.deepPurple),
+      theme: ThemeData(
+        textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme), // Apply Poppins font
+      ),
       home: const LoginPage(), //Pinokiyo1123 --pw for kaveeshaudani08@gmail.com
     );
   }
