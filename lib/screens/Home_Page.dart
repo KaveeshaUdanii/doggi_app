@@ -8,6 +8,7 @@ import 'package:doggi_app/screens/Favourite/FavoritesContent.dart';
 import 'package:doggi_app/screens/Account/AccountContent.dart';
 import '../auth/login_page.dart';
 import 'Home/ContactUsPage.dart'; // Import the Contact Us page
+import 'Home/PromotionsPage.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -165,10 +166,7 @@ class Menu extends StatelessWidget {
 
   Widget _buildStaggeredMenuItem(BuildContext context, IconData icon, String title, int index) {
     return SlideTransition(
-      position: Tween<Offset>(
-        begin: const Offset(-1, 0), // Start off-screen
-        end: Offset.zero, // End at original position
-      ).animate(CurvedAnimation(
+      position: Tween<Offset>(begin: const Offset(-1, 0), end: Offset.zero).animate(CurvedAnimation(
         parent: controller,
         curve: Interval(
           0.1 * index, // Stagger each item
@@ -190,13 +188,17 @@ class Menu extends StatelessWidget {
           style: const TextStyle(color: Color(0xFFF2F2F2), fontSize: 18), // Text color
         ),
         onTap: () {
-          if (title == "Contact Us") {
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(builder: (context) => ContactUsPage()),
-            // );
+          if (title == "Promotions") {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const PromotionsPage()), // Navigate to Promotions page
+            );
+          } else if (title == "Contact Us") {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ContactUsPage()),
+            );
           } else if (title == "Logout") {
-            // Call the logout method
             _logout(context);
           }
           // Handle other menu item taps here if needed
