@@ -50,21 +50,35 @@ class _CartPageState extends State<CartContent> {
           print('Cart item data: ${cartItem}');
 
           // Fetch corresponding food item from the food collection
-          final foodDoc = await FirebaseFirestore.instance
-              .collection('food')
-              .doc(cartItem['food_id']) // food_id points to food document
-              .get();
+          final foodDocId = cartItem['food_doc_id']; // Get the food document ID from cart
+          if (foodDocId == null) {
+            print('Food doc ID is null for cart item ${cartItem['id']}');
+            continue;
+          }
 
-          if (foodDoc.exists) {
-            var foodData = foodDoc.data() as Map<String, dynamic>;
-            cartItem['F_name'] = foodData['F_Name']; // Update with food name
-            cartItem['imageUrl'] = foodData['Image']; // Update with food image URL
-            cartItem['Price'] = _parsePrice(foodData['Price'] ?? '0'); // Parse price
-          } else {
-            cartItem['F_name'] = 'No Name'; // Fallback for missing food
-            cartItem['imageUrl'] = ''; // Fallback for missing image
-            cartItem['Price'] = 0.0; // Fallback for missing price
-            print('Food document not found for food_id: ${cartItem['food_id']}');
+          print('Fetching food data for food_doc_id: $foodDocId');
+
+          try {
+            final foodDoc = await FirebaseFirestore.instance
+                .collection('food')
+                .doc(foodDocId) // Use food_doc_id to fetch the food document
+                .get();
+
+            if (foodDoc.exists) {
+              var foodData = foodDoc.data() as Map<String, dynamic>;
+              print('Food data fetched: ${foodData}');
+
+              cartItem['F_name'] = foodData['F_Name']; // Update with food name
+              cartItem['imageUrl'] = foodData['Image']; // Update with food image URL
+              cartItem['Price'] = _parsePrice(foodData['Price'] ?? '0'); // Parse price
+            } else {
+              cartItem['F_name'] = 'No Name'; // Fallback for missing food
+              cartItem['imageUrl'] = ''; // Fallback for missing image
+              cartItem['Price'] = 0.0; // Fallback for missing price
+              print('Food document not found for food_doc_id: $foodDocId');
+            }
+          } catch (e) {
+            print('Error fetching food document: $e');
           }
 
           tempCartItems.add(cartItem);

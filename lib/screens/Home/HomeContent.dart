@@ -368,7 +368,11 @@ class _ProductCardState extends State<ProductCard> {
             padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 0.1),
             child: ElevatedButton.icon(
               onPressed: () async {
-                await addToCart(widget.product.name);
+                await addToCart(
+                  widget.product.name,
+                  widget.product.price,
+                  widget.product.imageUrl,
+                );
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Item added successfully!')),
                 );
@@ -389,28 +393,46 @@ class _ProductCardState extends State<ProductCard> {
     );
   }
 
-  Future<void> addToCart(String fName) async {
+  Future<void> addToCart(String fName, double price, String imageUrl) async {
     final user = FirebaseAuth.instance.currentUser;
 
     if (user != null) {
-      // Fetch the food document ID first
-      final foodSnapshot = await FirebaseFirestore.instance
-          .collection('Food')
-          .where('F_Name', isEqualTo: fName) // Assuming 'F_Name' is unique
-          .limit(1)
-          .get();
+      try {
+        // Fetch the food document ID using the food name (assuming it’s unique)
+        final foodSnapshot = await FirebaseFirestore.instance
+            .collection('Food')
+            .where('F_Name', isEqualTo: fName)
+            .limit(1)
+            .get();
 
-      if (foodSnapshot.docs.isNotEmpty) {
-        final foodDocId = foodSnapshot.docs.first.id; // Get the document ID
+        if (foodSnapshot.docs.isNotEmpty) {
+          final foodDocId = foodSnapshot.docs.first.id; // Get the document ID
 
-        // Save to Firestore in 'cart' collection
-        await FirebaseFirestore.instance.collection('cart').add({
-          'user_id': user.uid,
-          'F_name': fName,
-          'food_doc_id': foodDocId, // Save the food document ID
-          'timestamp': FieldValue.serverTimestamp(),
-        });
+          // Save to Firestore in 'cart' collection
+          await FirebaseFirestore.instance.collection('cart').add({
+            'user_id': user.uid,
+            'F_name': fName,
+            'price': price, // Save the price
+            'Image': imageUrl, // Save the image URL
+            'food_doc_id': foodDocId,
+            'timestamp': FieldValue.serverTimestamp(),
+          }).then((value) {
+            print("Item added to cart with ID: ${value.id}");
+          }).catchError((error) {
+            print("Failed to add item to cart: $error");
+          });
+        } else {
+          print("No food document found with name: $fName");
+        }
+      } catch (e) {
+        print("Error adding to cart: $e");
       }
+    } else {
+      print("User is not signed in");
     }
   }
+
+
+
+
 }
