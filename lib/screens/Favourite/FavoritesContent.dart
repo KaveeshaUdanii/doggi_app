@@ -98,7 +98,7 @@ class _FavoritesContentState extends State<FavoritesContent> {
           subtitle: data['Description'] ?? 'No Subtitle',
           price: double.tryParse(data['Price']?.replaceAll(RegExp(r'[^0-9.]'), '') ?? '0') ?? 0.0,
           reviews: (data['reviews'] ?? 0).toDouble(),
-          imageUrl: data['image'] ?? '',
+          imageUrl: data['Image'] ?? '',
           category: data['Category'] ?? 'No Category',
         ));
       }

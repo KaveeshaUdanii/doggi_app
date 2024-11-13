@@ -167,7 +167,7 @@ class _HomeContentState extends State<HomeContent> {
                     subtitle: data['Description'] ?? 'No Subtitle',
                     price: Price,
                     reviews: (data['reviews'] ?? 0).toDouble(),
-                    imageUrl: data['image'] ?? '',
+                    imageUrl: data['Image'] ?? '',
                   );
                 }).toList();
 
@@ -308,6 +308,7 @@ class _ProductCardState extends State<ProductCard> {
                   height: 100,
                   width: double.infinity,
                   errorBuilder: (context, error, stackTrace) {
+                    print('Error loading image: $error');
                     return Container(
                       color: Colors.grey[300],
                       height: 95,

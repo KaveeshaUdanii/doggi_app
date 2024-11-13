@@ -28,55 +28,65 @@ class _CartPageState extends State<CartContent> {
   Future<void> _fetchCartItems() async {
     final user = _auth.currentUser;
     if (user != null) {
-      final cartSnapshot = await FirebaseFirestore.instance
-          .collection('cart')
-          .where('user_id', isEqualTo: user.uid)
-          .get();
-
-      List<Map<String, dynamic>> tempCartItems = [];
-      for (var doc in cartSnapshot.docs) {
-        var cartItem = {
-          'id': doc.id,
-          ...doc.data()
-        };
-
-        // Fetch the corresponding food item from the food collection
-        final foodDoc = await FirebaseFirestore.instance
-            .collection('food')
-            .doc(cartItem['food_id']) // Assuming you have a field 'food_id' in cart
+      try {
+        // Fetch user's cart
+        final cartSnapshot = await FirebaseFirestore.instance
+            .collection('cart')
+            .where('user_id', isEqualTo: user.uid)
             .get();
 
-        if (foodDoc.exists) {
-          var foodData = foodDoc.data() as Map<String, dynamic>;
-          cartItem['name'] = foodData['name']; // Replace No Name with the actual name
-          cartItem['imageUrl'] = foodData['imageUrl']; // Assuming there's an image URL
-
-          // Convert price string to numeric value
-          String priceString = foodData['Price'] ?? '0';
-          double priceValue = _parsePrice(priceString);
-          cartItem['Price'] = priceValue;
-
-        } else {
-          cartItem['name'] = 'No Name'; // Fallback if the food item doesn't exist
+        if (cartSnapshot.docs.isEmpty) {
+          print('No items found in the cart.');
         }
 
-        tempCartItems.add(cartItem);
-      }
+        List<Map<String, dynamic>> tempCartItems = [];
+        for (var doc in cartSnapshot.docs) {
+          var cartItem = {
+            'id': doc.id,
+            ...doc.data()
+          };
 
-      setState(() {
-        cartItems = tempCartItems;
-        _calculateSubtotal();
-      });
+          // Log cart item data
+          print('Cart item data: ${cartItem}');
+
+          // Fetch corresponding food item from the food collection
+          final foodDoc = await FirebaseFirestore.instance
+              .collection('food')
+              .doc(cartItem['food_id']) // food_id points to food document
+              .get();
+
+          if (foodDoc.exists) {
+            var foodData = foodDoc.data() as Map<String, dynamic>;
+            cartItem['F_name'] = foodData['F_Name']; // Update with food name
+            cartItem['imageUrl'] = foodData['Image']; // Update with food image URL
+            cartItem['Price'] = _parsePrice(foodData['Price'] ?? '0'); // Parse price
+          } else {
+            cartItem['F_name'] = 'No Name'; // Fallback for missing food
+            cartItem['imageUrl'] = ''; // Fallback for missing image
+            cartItem['Price'] = 0.0; // Fallback for missing price
+            print('Food document not found for food_id: ${cartItem['food_id']}');
+          }
+
+          tempCartItems.add(cartItem);
+        }
+
+        setState(() {
+          cartItems = tempCartItems;
+          _calculateSubtotal();
+        });
+      } catch (e) {
+        print('Error fetching cart items: $e');
+      }
+    } else {
+      print('User is not authenticated.');
     }
   }
 
-  double _parsePrice(String Price) {
-    // Remove currency symbols (Rs., $, etc.), commas, and any extra spaces
-    Price = Price.replaceAll(RegExp(r'[^\d.]'), '');
-    // Try parsing the string to a double
-    return double.tryParse(Price) ?? 0.0;
+  double _parsePrice(String price) {
+    // Remove non-numeric characters and parse to double
+    price = price.replaceAll(RegExp(r'[^\d.]'), '');
+    return double.tryParse(price) ?? 0.0;
   }
-
 
   void _calculateSubtotal() {
     subtotal = 0;

@@ -188,21 +188,26 @@ class Menu extends StatelessWidget {
           style: const TextStyle(color: Color(0xFFF2F2F2), fontSize: 18), // Text color
         ),
         onTap: () {
-          if (title == "Promotions") {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const PromotionsPage()), // Navigate to Promotions page
-            );
-          } else if (title == "Contact Us") {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => ContactUsPage()),
-            );
-          } else if (title == "Logout") {
-            _logout(context);
+          // if (title == "Promotions") {
+          //   Navigator.push(
+          //     context,
+          //     MaterialPageRoute(builder: (context) => const PromotionsPage()), // Navigate to Promotions page
+          //   );
+          // } else if (title == "Contact Us") {
+          //   Navigator.push(
+          //     context,
+          //     MaterialPageRoute(builder: (context) => ContactUsPage()),
+          //   );
+          // } else if (title == "Logout") {
+          //   _logout(context);
+          // }else if (title == "My Profile") {
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(builder: (context) => AccountContent()),
+            // );
           }
           // Handle other menu item taps here if needed
-        },
+        //},
       ),
     );
   }
