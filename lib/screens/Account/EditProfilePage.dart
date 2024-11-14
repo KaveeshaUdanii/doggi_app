@@ -32,9 +32,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
             .get();
 
         setState(() {
-          _nameController.text = userDoc['name'] ?? ''; // Show empty if null
-          _emailController.text = userDoc['email'] ?? ''; // Show empty if null
-          _addressController.text = userDoc['address'] ?? ''; // Show empty if null
+          _nameController.text = userDoc['name'] ?? '';
+          _emailController.text = userDoc['email'] ?? '';
+          _addressController.text = userDoc['address'] ?? '';
         });
       }
     } catch (e) {
@@ -49,16 +49,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
       try {
         User? user = FirebaseAuth.instance.currentUser;
         if (user != null) {
-          // Only update fields that are filled out
           Map<String, dynamic> updatedData = {};
           if (_nameController.text.isNotEmpty) updatedData['name'] = _nameController.text;
           if (_emailController.text.isNotEmpty) updatedData['email'] = _emailController.text;
           if (_addressController.text.isNotEmpty) updatedData['address'] = _addressController.text;
 
-          // Update user details in Firestore's UserDetails collection
           await FirebaseFirestore.instance.collection('UserDetails').doc(user.uid).update(updatedData);
 
-          // Update user password if it was changed
           if (_passwordController.text.isNotEmpty) {
             await user.updatePassword(_passwordController.text);
           }
@@ -79,74 +76,72 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Edit Profile"),
+        title: const Text("Edit Profile", style: TextStyle(color: Color(0xFFE5E0FF))),
         backgroundColor: const Color(0xFF7286D3),
+        iconTheme: const IconThemeData(color: Color(0xFFE5E0FF)),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(20.0),
         child: Form(
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TextFormField(
-                controller: _nameController,
-                decoration: InputDecoration(
-                  labelText: 'Username',
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a username';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _emailController,
-                decoration: InputDecoration(
-                  labelText: 'Email',
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty || !value.contains('@')) {
-                    return 'Please enter a valid email';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _passwordController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  labelText: 'Password (Leave blank to keep unchanged)',
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                ),
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _addressController,
-                decoration: InputDecoration(
-                  labelText: 'Address',
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                ),
-              ),
+              _buildTextField(_nameController, 'Username', Icons.person, 'Please enter a username'),
+              const SizedBox(height: 15),
+              _buildTextField(_emailController, 'Email', Icons.email, 'Please enter a valid email'),
+              const SizedBox(height: 15),
+              _buildTextField(_passwordController, 'Password (Leave blank to keep unchanged)', Icons.lock, 'Enter new password', obscureText: true),
+              const SizedBox(height: 15),
+              _buildTextField(_addressController, 'Address', Icons.location_on, 'Please enter your address'),
               const SizedBox(height: 30),
-              ElevatedButton(
-                onPressed: _saveProfile,
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size.fromHeight(50),
-                  backgroundColor: const Color(0xFF7286D3),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _saveProfile,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF7286D3),
+                    padding: const EdgeInsets.symmetric(vertical: 15),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                  child: const Text(
+                    'Save Changes',
+                    style: TextStyle(fontSize: 18, color: Colors.white),
+                  ),
                 ),
-                child: const Text("Save Changes", style: TextStyle(fontSize: 18)),
               ),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildTextField(
+      TextEditingController controller,
+      String labelText,
+      IconData icon,
+      String validationMsg, {
+        bool obscureText = false,
+      }) {
+    return TextFormField(
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: labelText,
+        labelStyle: const TextStyle(color: Color(0xFF555555)),
+        prefixIcon: Icon(icon, color: Color(0xFF7286D3)),
+        filled: true,
+        fillColor: const Color(0xFFF0F0F5),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20),
+          borderSide: BorderSide.none,
+        ),
+        contentPadding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+      ),
+      obscureText: obscureText,
+      validator: (value) => value!.isEmpty ? validationMsg : null,
     );
   }
 }
