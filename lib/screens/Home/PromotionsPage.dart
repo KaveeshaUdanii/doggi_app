@@ -15,7 +15,7 @@ class PromotionsPage extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: ListView(
-          children: [
+          children: const [
             PromotionCard(
               title: '20% OFF on First Purchase!',
               description:
@@ -73,11 +73,11 @@ class PromotionCard extends StatelessWidget {
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30),
-          gradient: LinearGradient(
+          gradient: const LinearGradient(
             colors: [
-              const Color(0xFF7286D3), // Deep blue (Primary)
-              const Color(0xFF8EA7E9), // Lighter blue
-              const Color(0xFFD5C6E0), // Light lavender
+              Color(0xFF7286D3), // Deep blue (Primary)
+              Color(0xFF8EA7E9), // Lighter blue
+              Color(0xFFD5C6E0), // Light lavender
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,

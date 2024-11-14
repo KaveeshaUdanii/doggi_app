@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'auth/login_page.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();  // Initialize Firebase

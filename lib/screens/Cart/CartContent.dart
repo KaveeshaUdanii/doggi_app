@@ -47,7 +47,7 @@ class _CartPageState extends State<CartContent> {
           };
 
           // Log cart item data
-          print('Cart item data: ${cartItem}');
+          print('Cart item data: $cartItem');
 
           // Fetch corresponding food item from the food collection
           final foodDocId = cartItem['food_doc_id']; // Get the food document ID from cart
@@ -66,7 +66,7 @@ class _CartPageState extends State<CartContent> {
 
             if (foodDoc.exists) {
               var foodData = foodDoc.data() as Map<String, dynamic>;
-              print('Food data fetched: ${foodData}');
+              print('Food data fetched: $foodData');
 
               cartItem['F_name'] = foodData['F_Name']; // Update with food name
               cartItem['imageUrl'] = foodData['Image']; // Update with food image URL
