@@ -285,6 +285,7 @@ class _CartPageState extends State<CartContent> {
                 },
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 15),
+                  backgroundColor: Color(0xFFE5E0FF),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),
                   ),

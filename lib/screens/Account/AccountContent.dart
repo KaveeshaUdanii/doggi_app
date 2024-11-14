@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:io';
 import '../../auth/login_page.dart';
+import '../Payment/payment_page.dart';
 import 'AccountInfoPage.dart';
 import 'EditProfilePage.dart';
 import 'MyOrders.dart';
@@ -245,7 +246,12 @@ class _AccountContentState extends State<AccountContent> {
                   _buildOptionCard(
                     icon: Icons.payment_outlined,
                     text: "Payment Details",
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const PaymentPage()),
+                      );
+                    },
                   ),
                   _buildOptionCard(
                     icon: Icons.info_outline,

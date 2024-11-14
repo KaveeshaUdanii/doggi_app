@@ -104,7 +104,7 @@ class _HomeContentState extends State<HomeContent> {
                     margin: const EdgeInsets.only(right: 15),
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
                     decoration: BoxDecoration(
-                      color: isSelected ? const Color(0xFFE5E0FF) : const Color(0xFFFFD9F4),
+                      color: isSelected ? const Color(0xFFEDD9ED) : const Color(0xFFE5E0FF),
                       borderRadius: BorderRadius.circular(45),
                     ),
                     child: Row(
@@ -382,6 +382,7 @@ class _ProductCardState extends State<ProductCard> {
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size.fromHeight(32),
                 padding: EdgeInsets.zero,
+                backgroundColor: Color(0xFFE5E0FF),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15),
                 ),
