@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'CheckoutPage.dart';
@@ -13,21 +14,30 @@ class _CartContentState extends State<CartContent> {
 
   @override
   Widget build(BuildContext context) {
+    // Get the current user UID
+    String userId = FirebaseAuth.instance.currentUser!.uid;
+
     return Scaffold(
       // appBar: AppBar(
-      //   title: Text('Cart'),
-      //   backgroundColor: Colors.white,
-      //   elevation: 0,
+      //   // title: Text('Cart'),
+      //   // backgroundColor: Colors.white,
+      //   // elevation: 0,
       // ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection('cart').snapshots(),
+        stream: FirebaseFirestore.instance
+            .collection('cart')
+            .where('uid', isEqualTo: userId) // Filter by user UID
+            .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           }
 
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return Center(child: Text('No items in cart'));
+            return Center(child: Text('No items in cart',style: TextStyle(
+              color: Color(0xFF8EA7E9),
+              fontSize: 18.0,
+            ),));
           }
 
           var cartItems = snapshot.data!.docs;
@@ -49,7 +59,6 @@ class _CartContentState extends State<CartContent> {
                       margin: EdgeInsets.all(8.0),
                       child: ListTile(
                         contentPadding: EdgeInsets.all(10.0),
-                        // Use 'Image' field from Firestore
                         leading: Image.network(item['Image'] ?? '', errorBuilder: (context, error, stackTrace) {
                           return Icon(Icons.error);
                         }),
@@ -134,13 +143,13 @@ class _CartContentState extends State<CartContent> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Subtotal',style: TextStyle(
+                        Text('Subtotal', style: TextStyle(
                           fontSize: 18.0,
                           fontWeight: FontWeight.bold,
                         ),),
-                        Text('\$${(subtotal + shippingFee).toStringAsFixed(2)}',style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
+                        Text('\$${(subtotal + shippingFee).toStringAsFixed(2)}', style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
                         ),),
                       ],
                     ),
@@ -167,7 +176,6 @@ class _CartContentState extends State<CartContent> {
                         ),
                       ),
                     ),
-
                   ],
                 ),
               ),

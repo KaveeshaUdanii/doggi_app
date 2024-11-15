@@ -39,15 +39,16 @@ class _AccountContentState extends State<AccountContent> {
             .get();
 
         setState(() {
-          userName = userDoc['name'];
-          userEmail = userDoc['email'];
-          userProfileUrl = userDoc['profileImageUrl'];
+          userName = userDoc['name'] ?? "Unknown User"; // Handle null values
+          userEmail = userDoc['email'] ?? "No email found";
+          userProfileUrl = userDoc['profileImageUrl'] ?? ''; // Default to empty string if null
         });
       }
     } catch (e) {
       print("Error fetching user data: $e");
     }
   }
+
 
   Future<void> _pickAndUploadImage() async {
     // Request permission to access photos
@@ -189,7 +190,7 @@ class _AccountContentState extends State<AccountContent> {
                   children: [
                     CircleAvatar(
                       radius: 50,
-                      backgroundImage: userProfileUrl != null
+                      backgroundImage: userProfileUrl != null && userProfileUrl!.isNotEmpty
                           ? NetworkImage(userProfileUrl!)
                           : const AssetImage('assets/profile_image.jpg') as ImageProvider,
                     ),

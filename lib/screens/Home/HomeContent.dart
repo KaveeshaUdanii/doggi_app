@@ -236,7 +236,7 @@ class _ProductCardState extends State<ProductCard> {
       // Check Firestore to see if the product is already favorited by this user
       final favoritesSnapshot = await FirebaseFirestore.instance
           .collection('favorites')
-          .where('user_id', isEqualTo: user.uid)
+          .where('uid', isEqualTo: user.uid)
           .where('product_name', isEqualTo: widget.product.name)
           .get();
 
@@ -254,7 +254,7 @@ class _ProductCardState extends State<ProductCard> {
         // Remove from favorites
         final favoritesSnapshot = await FirebaseFirestore.instance
             .collection('favorites')
-            .where('user_id', isEqualTo: user.uid)
+            .where('uid', isEqualTo: user.uid)
             .where('product_name', isEqualTo: widget.product.name)
             .get();
 
@@ -273,7 +273,7 @@ class _ProductCardState extends State<ProductCard> {
           final foodDocId = foodSnapshot.docs.first.id;
 
           await FirebaseFirestore.instance.collection('favorites').add({
-            'user_id': user.uid,
+            'uid': user.uid,
             'product_name': widget.product.name,
             'food_doc_id': foodDocId,
             'timestamp': FieldValue.serverTimestamp(),
@@ -411,7 +411,7 @@ class _ProductCardState extends State<ProductCard> {
 
           // Save to Firestore in 'cart' collection with default quantity of 1
           await FirebaseFirestore.instance.collection('cart').add({
-            'user_id': user.uid,
+            'uid': user.uid,
             'F_name': fName,
             'price': price,
             'Image': imageUrl,
