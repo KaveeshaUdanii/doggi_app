@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+import 'CheckoutPage.dart';
+
 class CartContent extends StatefulWidget {
   @override
   _CartContentState createState() => _CartContentState();
@@ -12,11 +14,11 @@ class _CartContentState extends State<CartContent> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Cart'),
-        backgroundColor: Colors.white,
-        elevation: 0,
-      ),
+      // appBar: AppBar(
+      //   title: Text('Cart'),
+      //   backgroundColor: Colors.white,
+      //   elevation: 0,
+      // ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection('cart').snapshots(),
         builder: (context, snapshot) {
@@ -132,15 +134,24 @@ class _CartContentState extends State<CartContent> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Subtotal'),
-                        Text('\$${(subtotal + shippingFee).toStringAsFixed(2)}'),
+                        Text('Subtotal',style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
+                        ),),
+                        Text('\$${(subtotal + shippingFee).toStringAsFixed(2)}',style: TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold,
+                        ),),
                       ],
                     ),
                     SizedBox(height: 16.0),
                     Center(
                       child: ElevatedButton(
                         onPressed: () {
-                          // Handle checkout logic
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const CheckoutPage()),
+                          );
                         },
                         style: ElevatedButton.styleFrom(
                           padding: EdgeInsets.symmetric(vertical: 14.0, horizontal: 40.0),
