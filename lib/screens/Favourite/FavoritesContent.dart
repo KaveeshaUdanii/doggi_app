@@ -30,7 +30,7 @@ class _FavoritesContentState extends State<FavoritesContent> {
             child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
                   .collection('favorites')
-                  .where('user_id', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+                  .where('uid', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
                   .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -225,7 +225,7 @@ class ProductCard extends StatelessWidget {
         // Get the document reference for the favorite item to be removed
         final favoriteQuery = FirebaseFirestore.instance
             .collection('favorites')
-            .where('user_id', isEqualTo: userId)
+            .where('uid', isEqualTo: userId)
             .where('food_doc_id', isEqualTo: product.id);
 
         // Find the favorite document that matches the user and product

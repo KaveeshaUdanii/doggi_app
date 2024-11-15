@@ -236,7 +236,7 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
 
         // Save to Firestore in 'cart' collection
         await FirebaseFirestore.instance.collection('cart').add({
-          'user_id': user.uid,
+          'uid': user.uid,
           'F_name': fName,
           'food_doc_id': foodDoc.id, // Save the food document ID
           'Image': foodData['Image'], // Add the Image URL from Firestore
