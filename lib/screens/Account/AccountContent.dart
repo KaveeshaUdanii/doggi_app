@@ -258,20 +258,42 @@ class _AccountContentState extends State<AccountContent> {
     );
   }
 
-  Widget _buildOptionCard({required IconData icon, required String text, required VoidCallback onTap, Color color = Colors.black}) {
+  Widget _buildOptionCard({
+    required IconData icon,
+    required String text,
+    required VoidCallback onTap,
+    Color color = Colors.black,
+  }) {
     return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      elevation: 2,
-      margin: const EdgeInsets.only(bottom: 15),
-      child: ListTile(
-        leading: Icon(icon, color: color),
-        title: Text(
-          text,
-          style: TextStyle(color: color, fontWeight: FontWeight.w500),
-        ),
-        trailing: const Icon(Icons.arrow_forward_ios, color: Colors.grey, size: 16),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      elevation: 5, // Increased elevation for a smoother shadow effect
+      margin: const EdgeInsets.symmetric(vertical: 12),
+      shadowColor: Colors.black.withOpacity(0.2), // Soft shadow for a more refined look
+      child: InkWell(
+        borderRadius: BorderRadius.circular(20), // Ensure the InkWell follows the card's rounded corners
         onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16), // More balanced padding
+          child: Row(
+            children: [
+              Icon(icon, color: color, size: 24), // Larger icon for better visibility
+              const SizedBox(width: 12), // Added spacing between icon and text
+              Expanded(
+                child: Text(
+                  text,
+                  style: TextStyle(
+                    color: color,
+                    fontWeight: FontWeight.w600, // Slightly bolder for a stronger impact
+                    fontSize: 16, // Increased font size for readability
+                  ),
+                ),
+              ),
+              const Icon(Icons.arrow_forward_ios, color: Colors.grey, size: 18), // Slightly bigger arrow
+            ],
+          ),
+        ),
       ),
     );
   }
+
 }
