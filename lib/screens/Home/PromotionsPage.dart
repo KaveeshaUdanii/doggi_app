@@ -7,7 +7,7 @@ class PromotionsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Exclusive Promotions", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+        title: const Text("Exclusive Promotions", style: TextStyle(fontSize: 24, color: Color(0xFFE5E0FF))),
         backgroundColor: const Color(0xFF7286D3),
         elevation: 0,
         centerTitle: true,

@@ -31,9 +31,6 @@ class _AccountInfoPageState extends State<AccountInfoPage> {
             .doc(user.uid)
             .get();
 
-        // Debugging: Print the entire document to check data
-        print("Fetched User Document: ${userDoc.data()}");
-
         setState(() {
           userName = userDoc['name'];
           userEmail = userDoc['email'];
@@ -47,24 +44,32 @@ class _AccountInfoPageState extends State<AccountInfoPage> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
-        title: const Text("Account Info", style: TextStyle(color: Color(0xFFFFF2F2),)),
+        title: const Text(
+          "Account Info",
+          style: TextStyle(color: Color(0xFFFFF2F2)),
+        ),
         backgroundColor: const Color(0xFF7286D3),
       ),
       body: userName == null || userEmail == null
           ? const Center(child: CircularProgressIndicator())
           : Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: EdgeInsets.symmetric(
+          horizontal: screenWidth * 0.05, // Adaptive horizontal padding
+          vertical: screenHeight * 0.02, // Adaptive vertical padding
+        ),
         child: SingleChildScrollView(
           child: Column(
             children: [
-              _buildProfileHeader(),
-              const SizedBox(height: 20),
+              _buildProfileHeader(screenWidth),
+              SizedBox(height: screenHeight * 0.03), // Adaptive spacing
               _buildDetailCard("Email", userEmail ?? "Not available"),
               _buildDetailCard("Contact", contact ?? "Not available"),
               _buildDetailCard("Address", userAddress ?? "Not available"),
@@ -75,7 +80,7 @@ class _AccountInfoPageState extends State<AccountInfoPage> {
     );
   }
 
-  Widget _buildProfileHeader() {
+  Widget _buildProfileHeader(double screenWidth) {
     return Container(
       decoration: BoxDecoration(
         color: const Color(0xFF8EA7E9),
@@ -88,35 +93,42 @@ class _AccountInfoPageState extends State<AccountInfoPage> {
           ),
         ],
       ),
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(screenWidth * 0.05), // Adaptive padding
       child: Row(
         children: [
           CircleAvatar(
-            radius: 50,
+            radius: screenWidth * 0.12, // Adaptive radius
             backgroundImage: userProfileUrl != null && userProfileUrl!.isNotEmpty
                 ? NetworkImage(userProfileUrl!)
                 : const AssetImage('assets/user.png') as ImageProvider,
           ),
-          const SizedBox(width: 20),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                userName ?? "Loading...",
-                style: const TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+          SizedBox(width: screenWidth * 0.05), // Adaptive spacing
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  userName ?? "Loading...",
+                  style: TextStyle(
+                    fontSize: screenWidth * 0.05, // Adaptive font size
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-              ),
-              Text(
-                userEmail ?? "Loading...",
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.white70,
+                SizedBox(height: screenWidth * 0.01), // Spacing
+                Text(
+                  userEmail ?? "Loading...",
+                  style: TextStyle(
+                    fontSize: screenWidth * 0.04, // Adaptive font size
+                    color: Colors.white70,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),
@@ -128,14 +140,17 @@ class _AccountInfoPageState extends State<AccountInfoPage> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       elevation: 5,
       margin: const EdgeInsets.symmetric(vertical: 10),
-      child: ListTile(
-        title: Text(
-          title,
-          style: const TextStyle(fontWeight: FontWeight.w500),
-        ),
-        subtitle: Text(
-          detail,
-          style: const TextStyle(color: Colors.grey, fontSize: 16),
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: ListTile(
+          title: Text(
+            title,
+            style: const TextStyle(fontWeight: FontWeight.w500),
+          ),
+          subtitle: Text(
+            detail,
+            style: const TextStyle(color: Colors.grey, fontSize: 16),
+          ),
         ),
       ),
     );
