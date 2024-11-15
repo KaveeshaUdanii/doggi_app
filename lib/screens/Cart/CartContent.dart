@@ -171,7 +171,7 @@ class _CartContentState extends State<CartContent> {
                         ),
                         child: Text(
                           'Checkout',
-                          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
+                          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600, color: Color(0xFFE5E0FF)),
                         ),
                       ),
                     ),
