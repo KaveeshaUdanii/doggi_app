@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 import '../Home/FoodDetailsPage.dart';
 
-// Favorites Page Content (StatefulWidget)
+
 class FavoritesContent extends StatefulWidget {
   const FavoritesContent({super.key});
 
@@ -20,14 +19,13 @@ class _FavoritesContentState extends State<FavoritesContent> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Title for the Favorites page
           const Text(
             "Favorites",
             style: TextStyle(fontSize: 28, color: Color(0xFF7286D3)),
           ),
           const SizedBox(height: 20),
 
-          // StreamBuilder to fetch user's favorite products
+
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
@@ -86,7 +84,7 @@ class _FavoritesContentState extends State<FavoritesContent> {
     List<Product> favoriteProducts = [];
 
     for (var doc in favoriteDocs) {
-      final foodDocId = doc['food_doc_id']; // Get food document ID from favorites
+      final foodDocId = doc['food_doc_id'];
       final foodDoc = await FirebaseFirestore.instance.collection('Food').doc(foodDocId).get();
 
       if (foodDoc.exists) {
@@ -109,16 +107,16 @@ class _FavoritesContentState extends State<FavoritesContent> {
 
 // Product class to hold product details
 class Product {
-  final String id; // Added product ID
+  final String id;
   final String name;
-  final String subtitle; // For description
+  final String subtitle;
   final double price;
   final double reviews;
   final String imageUrl;
   final String category;
 
   Product({
-    required this.id, // Ensure ID is passed for removal
+    required this.id,
     required this.name,
     required this.subtitle,
     required this.price,
@@ -138,7 +136,6 @@ class ProductCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Navigate to FoodDetailsPage when the card is clicked
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -156,7 +153,6 @@ class ProductCard extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Product image on the left
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: Image.network(
@@ -230,13 +226,12 @@ class ProductCard extends StatelessWidget {
         final favoriteQuery = FirebaseFirestore.instance
             .collection('favorites')
             .where('user_id', isEqualTo: userId)
-            .where('food_doc_id', isEqualTo: product.id);  // You need the product's 'id'
+            .where('food_doc_id', isEqualTo: product.id);
 
         // Find the favorite document that matches the user and product
         final snapshot = await favoriteQuery.get();
 
         if (snapshot.docs.isNotEmpty) {
-          // If we find a match, we delete that document from Firestore
           for (var doc in snapshot.docs) {
             await doc.reference.delete();
           }

@@ -4,7 +4,7 @@ import 'package:doggi_app/screens/Instructions/ArticlesContent.dart';
 import 'package:doggi_app/screens/Instructions/VideosContent.dart';
 
 
-// Stories Page Content (StatefulWidget)
+
 class StoriesContent extends StatefulWidget {
   const StoriesContent({super.key});
 

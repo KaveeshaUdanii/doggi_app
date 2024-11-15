@@ -7,9 +7,8 @@ class AppTheme {
     return ThemeData(
       primaryColor: AppColors.primaryColor,
       scaffoldBackgroundColor: AppColors.backgroundColor,
-      // Apply Poppins font using GoogleFonts
       textTheme: GoogleFonts.poppinsTextTheme(
-        TextTheme(
+        const TextTheme(
           displayLarge: TextStyle(
             fontSize: 40,
             fontWeight: FontWeight.bold,
@@ -41,7 +40,7 @@ class AppTheme {
         ),
       ),
       checkboxTheme: CheckboxThemeData(
-        fillColor: MaterialStateProperty.all(AppColors.primaryColor),
+        fillColor: WidgetStateProperty.all(AppColors.primaryColor),
       ),
     );
   }

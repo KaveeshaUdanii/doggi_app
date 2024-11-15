@@ -9,7 +9,7 @@ import '../auth/login_page.dart';
 import 'Account/AccountContent.dart';
 import 'Home/ContactUsPage.dart';
 import 'Home/PromotionsPage.dart';
-import 'Account/MyOrders.dart'; // Make sure this import is correct
+import 'Account/MyOrders.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -36,7 +36,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     const CartContent(),
     const StoriesContent(),
     const FavoritesContent(),
-    const AccountContent(),
+    //const AccountContent(),
   ];
 
   @override
@@ -183,7 +183,7 @@ class Menu extends StatelessWidget {
           if (title == "My Orders") {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const MyOrders()), // Navigate to MyOrders
+              MaterialPageRoute(builder: (context) => const MyOrders()),
             );
           } else if (title == "Promotions") {
             Navigator.push(
@@ -193,7 +193,7 @@ class Menu extends StatelessWidget {
           } else if (title == "Contact Us") {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => ContactUsPage()),
+              MaterialPageRoute(builder: (context) => const ContactUsPage()),
             );
           } else if (title == "Logout") {
             _logout(context);

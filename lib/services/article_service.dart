@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import '../models/article.dart';
 
 class ArticleService {
-  // Update URL to fetch articles with the query 'dog food'
+
   final String apiUrl = 'https://newsapi.org/v2/everything?q=dog+food';
 
   // Fetch dog food articles from News API using the API key

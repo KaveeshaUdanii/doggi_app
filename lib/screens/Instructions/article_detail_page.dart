@@ -32,8 +32,7 @@ class ArticleDetailPage extends StatelessWidget {
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                // Open the article in a browser
-                // You can use url_launcher package here if you'd like
+
               },
               child: const Text('Read Full Article'),
             ),

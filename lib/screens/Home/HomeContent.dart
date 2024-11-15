@@ -265,24 +265,24 @@ class _ProductCardState extends State<ProductCard> {
         // Add to favorites
         final foodSnapshot = await FirebaseFirestore.instance
             .collection('Food')
-            .where('F_Name', isEqualTo: widget.product.name) // Assuming 'F_Name' is unique
+            .where('F_Name', isEqualTo: widget.product.name)
             .limit(1)
             .get();
 
         if (foodSnapshot.docs.isNotEmpty) {
-          final foodDocId = foodSnapshot.docs.first.id; // Get the document ID
+          final foodDocId = foodSnapshot.docs.first.id;
 
           await FirebaseFirestore.instance.collection('favorites').add({
             'user_id': user.uid,
             'product_name': widget.product.name,
-            'food_doc_id': foodDocId, // Add food document ID to favorites
+            'food_doc_id': foodDocId,
             'timestamp': FieldValue.serverTimestamp(),
           });
         }
       }
 
       setState(() {
-        isFavorited = !isFavorited; // Toggle the favorite state
+        isFavorited = !isFavorited;
       });
     }
   }
@@ -326,7 +326,7 @@ class _ProductCardState extends State<ProductCard> {
                     isFavorited ? Icons.favorite : Icons.favorite_border,
                     color: Colors.red,
                   ),
-                  onPressed: _toggleFavorite, // Use the toggle function
+                  onPressed: _toggleFavorite,
                 ),
               ),
             ],
@@ -362,8 +362,8 @@ class _ProductCardState extends State<ProductCard> {
               style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
             ),
           ),
-          const Spacer(), // Use Spacer to push the button to the bottom
-          // Add to Cart button centered at the bottom
+          const Spacer(),
+
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 0.1),
             child: ElevatedButton.icon(
@@ -382,7 +382,7 @@ class _ProductCardState extends State<ProductCard> {
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size.fromHeight(32),
                 padding: EdgeInsets.zero,
-                backgroundColor: Color(0xFFE5E0FF),
+                backgroundColor: const Color(0xFFE5E0FF),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15),
                 ),

@@ -43,12 +43,12 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         backgroundColor: const Color(0xFF7286D3),
-        elevation: 4.0, // Slight elevation for a floating effect
+        elevation: 4.0,
       ),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween, // Space between top content and button
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Expanded( // Use Expanded to take up the remaining space for other content
+          Expanded(
             child: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -99,7 +99,7 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
                         const Icon(Icons.access_time, color: Color(0xFF8EA7E9)),
                         const SizedBox(width: 4),
                         Text(
-                          'Delivery Time: 30 min', // Hardcoded delivery time in design
+                          'Delivery Time: 30 min',
                           style: TextStyle(fontSize: 16, color: Colors.grey[700]),
                         ),
                       ],
@@ -125,7 +125,7 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
                           onPressed: decreaseQuantity,
                         ),
                         Text(
-                          '$quantity', // Dynamic quantity display
+                          '$quantity',
                           style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
                         ),
                         IconButton(
@@ -138,7 +138,7 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
 
                     // Total Price
                     Text(
-                      'Total: \$${totalPrice.toStringAsFixed(2)}', // Display total price
+                      'Total: \$${totalPrice.toStringAsFixed(2)}',
                       style: const TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
@@ -151,13 +151,13 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
               ),
             ),
           ),
-          // Add to Cart and Buy Now buttons at the bottom in a Row
+
           Padding(
             padding: const EdgeInsets.all(40.0),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween, // Space buttons apart
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // Add to Cart Button inside a circular container
+
                 GestureDetector(
                   onTap: () async {
                     await addToCart(widget.product.name);
@@ -167,7 +167,7 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
                   },
                   child: Container(
                     decoration: BoxDecoration(
-                      color: const Color(0xFF8EA7E9), // Button color
+                      color: const Color(0xFF8EA7E9),
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
@@ -198,9 +198,9 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
                     backgroundColor: WidgetStateProperty.all(const Color(0xFF7286D3)),
                     padding: WidgetStateProperty.all(const EdgeInsets.symmetric(vertical: 16, horizontal: 60)),
                     shape: WidgetStateProperty.all(RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(40), // Rounded button
+                      borderRadius: BorderRadius.circular(40),
                     )),
-                    elevation: WidgetStateProperty.all(4), // Light shadow effect
+                    elevation: WidgetStateProperty.all(4),
                   ),
                   child: const Text(
                     'Buy Now',

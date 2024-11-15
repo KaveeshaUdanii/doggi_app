@@ -35,7 +35,7 @@ class _ArticleListPageState extends State<ArticleListPage> {
           } else {
             List<Article> articles = snapshot.data!;
 
-            // Use ListView to display one article per card
+
             return ListView.builder(
               itemCount: articles.length,
               itemBuilder: (context, index) {
@@ -58,7 +58,6 @@ class ArticleCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Navigate to ArticleDetailPage and pass the article
         Navigator.push(
           context,
           MaterialPageRoute(

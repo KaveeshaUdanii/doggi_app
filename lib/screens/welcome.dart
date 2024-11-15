@@ -19,7 +19,7 @@ class _welcomeState extends State<welcome> {
           children: [
             Image.asset(
               'assets/welcome.gif',
-              width: 200, // Adjust the size as needed
+              width: 200,
               height: 200,
             ),
             const SizedBox(height: 20),

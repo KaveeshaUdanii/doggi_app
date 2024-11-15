@@ -122,7 +122,7 @@ class PromotionCard extends StatelessWidget {
             Center(
               child: ElevatedButton(
                 onPressed: () {
-                  // Handle action (e.g., apply promotion code)
+
                 },
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 14), backgroundColor: const Color(0xFFE5E0FF),

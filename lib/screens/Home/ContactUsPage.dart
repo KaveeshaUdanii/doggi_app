@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ContactUsPage extends StatefulWidget {
+  const ContactUsPage({super.key});
+
   @override
   _ContactUsPageState createState() => _ContactUsPageState();
 }
@@ -112,7 +114,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
       decoration: InputDecoration(
         labelText: labelText,
         labelStyle: const TextStyle(color: Color(0xFF555555)),
-        prefixIcon: Icon(icon, color: Color(0xFF7286D3)),
+        prefixIcon: Icon(icon, color: const Color(0xFF7286D3)),
         filled: true,
         fillColor: const Color(0xFFF0F0F5),
         border: OutlineInputBorder(

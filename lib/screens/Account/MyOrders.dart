@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class MyOrders extends StatelessWidget {
-  const MyOrders({Key? key}) : super(key: key);
+  const MyOrders({super.key});
 
   Future<List<Map<String, dynamic>>> _fetchUserOrders() async {
     User? user = FirebaseAuth.instance.currentUser;
