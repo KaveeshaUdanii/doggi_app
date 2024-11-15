@@ -23,7 +23,7 @@ class MyOrders extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Orders', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text('My Orders', style: TextStyle(color: Color(0xFFFFF2F2),)),
         backgroundColor: const Color(0xFF7286D3),
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(

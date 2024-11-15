@@ -40,7 +40,7 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
       appBar: AppBar(
         title: Text(
           widget.product.name,
-          style: const TextStyle(fontWeight: FontWeight.bold),
+          style: const TextStyle(color: Color(0xFFFFF2F2),),
         ),
         backgroundColor: const Color(0xFF7286D3),
         elevation: 4.0,

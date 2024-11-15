@@ -7,6 +7,7 @@ import 'package:doggi_app/screens/Instructions/StoriesContent.dart';
 import 'package:doggi_app/screens/Favourite/FavoritesContent.dart';
 import '../auth/login_page.dart';
 import 'Account/AccountContent.dart';
+import 'Account/AccountInfoPage.dart';
 import 'Home/ContactUsPage.dart';
 import 'Home/PromotionsPage.dart';
 import 'Account/MyOrders.dart';
@@ -36,7 +37,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     CartContent(),
     const StoriesContent(),
     const FavoritesContent(),
-    //const AccountContent(),
+    const AccountContent(),
   ];
 
   @override
@@ -143,7 +144,7 @@ class Menu extends StatelessWidget {
             child: const CircleAvatar(
               radius: 50,
               backgroundColor: Colors.white,
-              backgroundImage: AssetImage('assets/user_profile.jpg'),
+              backgroundImage: AssetImage('assets/user.png'),
             ),
           ),
           _buildStaggeredMenuItem(context, Icons.account_circle_rounded, "My Profile", 0),
@@ -200,7 +201,7 @@ class Menu extends StatelessWidget {
           } else if (title == "My Profile") {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const AccountContent()),
+              MaterialPageRoute(builder: (context) => const AccountInfoPage()),
             );
           }
         },

@@ -38,17 +38,29 @@ class _AccountContentState extends State<AccountContent> {
             .doc(user.uid)
             .get();
 
-        setState(() {
-          userName = userDoc['name'] ?? "Unknown User"; // Handle null values
-          userEmail = userDoc['email'] ?? "No email found";
-          userProfileUrl = userDoc['profileImageUrl'] ?? ''; // Default to empty string if null
-        });
+        // Check if data exists in Firestore
+        if (userDoc.exists) {
+          setState(() {
+            userName = userDoc['name'] ?? "Unknown User";
+            userEmail = userDoc['email'] ?? "No email found";
+            userProfileUrl = userDoc['profileImageUrl'] ?? '';
+          });
+        } else {
+          print("No user data found");
+          setState(() {
+            userName = "No name found";
+            userEmail = "No email found";
+          });
+        }
       }
     } catch (e) {
       print("Error fetching user data: $e");
+      setState(() {
+        userName = "Error loading user data";
+        userEmail = "Error loading user data";
+      });
     }
   }
-
 
   Future<void> _pickAndUploadImage() async {
     // Request permission to access photos
@@ -190,9 +202,9 @@ class _AccountContentState extends State<AccountContent> {
                   children: [
                     CircleAvatar(
                       radius: 50,
-                      backgroundImage: userProfileUrl != null && userProfileUrl!.isNotEmpty
+                      backgroundImage: (userProfileUrl != null && userProfileUrl!.isNotEmpty)
                           ? NetworkImage(userProfileUrl!)
-                          : const AssetImage('assets/profile_image.jpg') as ImageProvider,
+                          : const AssetImage('assets/user.png') as ImageProvider,
                     ),
                     IconButton(
                       icon: const Icon(Icons.camera_alt, color: Colors.white),
@@ -223,16 +235,17 @@ class _AccountContentState extends State<AccountContent> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
+              child: ListView(
                 children: [
                   _buildOptionCard(
                     icon: Icons.person_outline,
                     text: "Edit Profile",
                     onTap: () {
                       Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const EditProfilePage()),
-                    );},
+                        context,
+                        MaterialPageRoute(builder: (context) => const EditProfilePage()),
+                      );
+                    },
                   ),
                   _buildOptionCard(
                     icon: Icons.shopping_bag_outlined,

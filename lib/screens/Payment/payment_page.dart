@@ -94,7 +94,7 @@ class _PaymentPageState extends State<PaymentPage> {
         labelStyle: const TextStyle(color: Color(0xFF555555)),
         prefixIcon: Icon(icon, color: const Color(0xFF7286D3)),
         filled: true,
-        fillColor: const Color(0xFFF3E7F3),
+        fillColor: const Color(0xFFF0F0F5),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(20),
           borderSide: BorderSide.none,

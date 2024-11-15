@@ -49,7 +49,7 @@ class _AccountInfoPageState extends State<AccountInfoPage> {
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
-        title: const Text("Account Info"),
+        title: const Text("Account Info", style: TextStyle(color: Color(0xFFFFF2F2),)),
         backgroundColor: const Color(0xFF7286D3),
       ),
       body: userName == null || userEmail == null
