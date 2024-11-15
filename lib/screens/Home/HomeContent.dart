@@ -399,7 +399,7 @@ class _ProductCardState extends State<ProductCard> {
 
     if (user != null) {
       try {
-        // Fetch the food document ID using the food name (assuming it's unique)
+        // Fetch the food document ID using the food name (assuming it’s unique)
         final foodSnapshot = await FirebaseFirestore.instance
             .collection('Food')
             .where('F_Name', isEqualTo: fName)
@@ -409,14 +409,14 @@ class _ProductCardState extends State<ProductCard> {
         if (foodSnapshot.docs.isNotEmpty) {
           final foodDocId = foodSnapshot.docs.first.id; // Get the document ID
 
-          // Save to Firestore in 'cart' collection, including quantity (default 1)
+          // Save to Firestore in 'cart' collection with default quantity of 1
           await FirebaseFirestore.instance.collection('cart').add({
             'user_id': user.uid,
             'F_name': fName,
-            'price': price, // Save the price
-            'Image': imageUrl, // Save the image URL
+            'price': price,
+            'Image': imageUrl,
             'food_doc_id': foodDocId,
-            'quantity': 1, // Default quantity set to 1
+            'quantity': 1,
             'timestamp': FieldValue.serverTimestamp(),
           }).then((value) {
             print("Item added to cart with ID: ${value.id}");

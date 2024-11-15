@@ -227,16 +227,31 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
           .get();
 
       if (foodSnapshot.docs.isNotEmpty) {
-        final foodDocId = foodSnapshot.docs.first.id; // Get the document ID
+        final foodDoc = foodSnapshot.docs.first;
+        final foodData = foodDoc.data();
+
+        // Get the price and convert it to an integer (in cents, for example)
+        double price = foodData['price']?.toDouble() ?? 0.0;
+        int priceInCents = (price * 100).toInt(); // Convert to integer (cents)
 
         // Save to Firestore in 'cart' collection
         await FirebaseFirestore.instance.collection('cart').add({
           'user_id': user.uid,
           'F_name': fName,
-          'food_doc_id': foodDocId, // Save the food document ID
+          'food_doc_id': foodDoc.id, // Save the food document ID
+          'Image': foodData['Image'], // Add the Image URL from Firestore
+          'price': priceInCents, // Save as integer (cents)
+          'quantity': 1, // Default quantity
           'timestamp': FieldValue.serverTimestamp(),
         });
+
+        print("Item added to cart with price (in cents): $priceInCents");
+      } else {
+        print("Food item not found in Firestore");
       }
+    } else {
+      print("User is not logged in");
     }
   }
+
 }
