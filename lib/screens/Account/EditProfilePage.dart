@@ -15,6 +15,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _contactController = TextEditingController(); // Added contact number controller
 
   @override
   void initState() {
@@ -35,6 +36,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
           _nameController.text = userDoc['name'] ?? '';
           _emailController.text = userDoc['email'] ?? '';
           _addressController.text = userDoc['address'] ?? '';
+          _contactController.text = userDoc['contact'] ?? ''; // Fetching the contact number
         });
       }
     } catch (e) {
@@ -53,9 +55,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
           if (_nameController.text.isNotEmpty) updatedData['name'] = _nameController.text;
           if (_emailController.text.isNotEmpty) updatedData['email'] = _emailController.text;
           if (_addressController.text.isNotEmpty) updatedData['address'] = _addressController.text;
+          if (_contactController.text.isNotEmpty) updatedData['contact'] = _contactController.text; // Adding contact number update
 
           await FirebaseFirestore.instance.collection('UserDetails').doc(user.uid).update(updatedData);
 
+          // Only update the password if it's not empty
           if (_passwordController.text.isNotEmpty) {
             await user.updatePassword(_passwordController.text);
           }
@@ -94,6 +98,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
               _buildTextField(_passwordController, 'Password (Leave blank to keep unchanged)', Icons.lock, 'Enter new password', obscureText: true),
               const SizedBox(height: 15),
               _buildTextField(_addressController, 'Address', Icons.location_on, 'Please enter your address'),
+              const SizedBox(height: 15),
+              _buildTextField(_contactController, 'Contact Number', Icons.phone, 'Please enter a valid contact number'), // New contact number field
               const SizedBox(height: 30),
               SizedBox(
                 width: double.infinity,
@@ -141,7 +147,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         contentPadding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
       ),
       obscureText: obscureText,
-      validator: (value) => value!.isEmpty ? validationMsg : null,
+      validator: (value) => value!.isEmpty && !obscureText ? validationMsg : null, // Updated to allow empty password
     );
   }
 }
