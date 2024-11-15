@@ -13,7 +13,7 @@ class _AccountInfoPageState extends State<AccountInfoPage> {
   String? userName;
   String? userEmail;
   String? userProfileUrl;
-  String? userPhoneNumber;
+  String? contact;
   String? userAddress;
 
   @override
@@ -31,11 +31,14 @@ class _AccountInfoPageState extends State<AccountInfoPage> {
             .doc(user.uid)
             .get();
 
+        // Debugging: Print the entire document to check data
+        print("Fetched User Document: ${userDoc.data()}");
+
         setState(() {
           userName = userDoc['name'];
           userEmail = userDoc['email'];
-          userPhoneNumber = userDoc['phone_number'] ?? 'Not provided';
-          userAddress = userDoc['address'] ?? 'Not provided';
+          contact = userDoc['contact'] ?? 'Not provided'; // Default fallback
+          userAddress = userDoc['address'] ?? 'Not provided'; // Default fallback
           userProfileUrl = userDoc['profileImageUrl'];
         });
       }
@@ -43,6 +46,7 @@ class _AccountInfoPageState extends State<AccountInfoPage> {
       print("Error fetching user data: $e");
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +66,7 @@ class _AccountInfoPageState extends State<AccountInfoPage> {
               _buildProfileHeader(),
               const SizedBox(height: 20),
               _buildDetailCard("Email", userEmail ?? "Not available"),
-              _buildDetailCard("Phone Number", userPhoneNumber ?? "Not available"),
+              _buildDetailCard("Contact", contact ?? "Not available"),
               _buildDetailCard("Address", userAddress ?? "Not available"),
             ],
           ),
@@ -91,7 +95,7 @@ class _AccountInfoPageState extends State<AccountInfoPage> {
             radius: 50,
             backgroundImage: userProfileUrl != null && userProfileUrl!.isNotEmpty
                 ? NetworkImage(userProfileUrl!)
-                : const AssetImage('assets/profile_image.jpg') as ImageProvider,
+                : const AssetImage('assets/user.png') as ImageProvider,
           ),
           const SizedBox(width: 20),
           Column(
