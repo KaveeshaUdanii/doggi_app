@@ -10,7 +10,7 @@ class CartContent extends StatefulWidget {
 }
 
 class _CartContentState extends State<CartContent> {
-  double shippingFee = 30.0;
+  double shippingFee = 1.2;
 
   @override
   Widget build(BuildContext context) {
