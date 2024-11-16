@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
 class CheckoutPage extends StatefulWidget {
   const CheckoutPage({super.key});
@@ -10,67 +10,90 @@ class CheckoutPage extends StatefulWidget {
 }
 
 class _CheckoutPageState extends State<CheckoutPage> {
-  final _formKey = GlobalKey<FormState>();
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  String? userName;
-  String? email;
-  String? address;
-  String? phoneNumber;
-  bool isLoading = true;
+  final TextEditingController _contactController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
+  late String userId;
+  List<Map<String, dynamic>> cartItems = [];
+  double totalPrice = 0.0;
 
   @override
   void initState() {
     super.initState();
-    _fetchUserData();
+    userId = FirebaseAuth.instance.currentUser!.uid;
+    _loadCartItems();
+    _loadUserDetails();
   }
 
-  Future<void> _fetchUserData() async {
-    User? user = _auth.currentUser;
-    if (user != null) {
-      try {
-        DocumentSnapshot userDoc = await FirebaseFirestore.instance
-            .collection('UserDetails')
-            .doc(user.uid)
-            .get();
+  // Load cart items from Firestore
+  Future<void> _loadCartItems() async {
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection('cart')
+        .where('uid', isEqualTo: userId)
+        .get();
 
+    setState(() {
+      cartItems = snapshot.docs.map((doc) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        data['id'] = doc.id; // Include document ID for potential updates
+        return data;
+      }).toList();
+
+      totalPrice = cartItems.fold(0.0, (sum, item) {
+        return sum + (item['price'] * item['quantity']);
+      });
+    });
+  }
+
+  // Load user details from Firestore
+  Future<void> _loadUserDetails() async {
+    DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .get();
+
+    if (userSnapshot.exists) {
+      Map<String, dynamic>? userData = userSnapshot.data() as Map<String, dynamic>?;
+      if (userData != null) {
         setState(() {
-          userName = userDoc['name'] ?? '';
-          email = userDoc['email'] ?? '';
-          address = userDoc['address'] ?? '';
-          phoneNumber = userDoc['phone_number'] ?? '';
-          isLoading = false;
+          _contactController.text = userData['contact'] ?? '';
+          _addressController.text = userData['address'] ?? '';
         });
-      } catch (e) {
-        print("Error fetching user data: $e");
-        setState(() => isLoading = false);
       }
     }
   }
 
+  // Save order details to Firestore
   Future<void> _placeOrder() async {
-    if (_formKey.currentState!.validate()) {
-      User? user = _auth.currentUser;
-      if (user != null) {
-        try {
-          await FirebaseFirestore.instance.collection('Orders').add({
-            'UID': user.uid,
-            'name': userName,
-            'email': email,
-            'address': address,
-            'phone_number': phoneNumber,
-          });
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Order placed successfully!")),
-          );
-          Navigator.pop(context);
-        } catch (e) {
-          print("Error placing order: $e");
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Error placing order: $e")),
-          );
-        }
+    try {
+      await FirebaseFirestore.instance.collection('Orders').add({
+        'uid': userId,
+        'items': cartItems.map((item) {
+          return {
+            'food_name': item['F_name'],
+            'quantity': item['quantity'],
+            'price': item['price'],
+          };
+        }).toList(),
+        'total_price': totalPrice,
+        'contact': _contactController.text,
+        'address': _addressController.text,
+        'order_date': FieldValue.serverTimestamp(),
+      });
+
+      // Clear cart after placing the order
+      for (var item in cartItems) {
+        await FirebaseFirestore.instance.collection('cart').doc(item['id']).delete();
       }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Order placed successfully!')),
+      );
+
+      Navigator.pop(context); // Navigate back to the previous page or home screen
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to place order. Please try again.')),
+      );
     }
   }
 
@@ -78,121 +101,80 @@ class _CheckoutPageState extends State<CheckoutPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Checkout"),
-        backgroundColor: const Color(0xFF7286D3),
+        title: const Text('Checkout'),
+        backgroundColor: const Color(0xFF8EA7E9),
       ),
-      body: isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : Padding(
+      body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                "Review Your Details",
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF8EA7E9),
-                ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Contact Details',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            TextField(
+              controller: _contactController,
+              decoration: const InputDecoration(
+                labelText: 'Contact Number',
+                border: OutlineInputBorder(),
               ),
-              const SizedBox(height: 20),
-              _buildReadOnlyField("Username", userName ?? ""),
-              _buildReadOnlyField("Email", email ?? ""),
-              _buildEditableField("Address", address ?? "", (value) {
-                address = value;
-              }),
-              _buildEditableField("Phone Number", phoneNumber ?? "",
-                      (value) {
-                    phoneNumber = value;
-                  }),
-              const Spacer(),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _placeOrder,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16), backgroundColor: const Color(0xFF8EA7E9),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50),
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              'Delivery Address',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            TextField(
+              controller: _addressController,
+              decoration: const InputDecoration(
+                labelText: 'Address',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Expanded(
+              child: ListView.builder(
+                itemCount: cartItems.length,
+                itemBuilder: (context, index) {
+                  var item = cartItems[index];
+                  return Card(
+                    child: ListTile(
+                      title: Text(item['F_name'] ?? 'Item'),
+                      subtitle: Text(
+                          'Quantity: ${item['quantity']} | Price: \$${item['price'].toStringAsFixed(2)}'),
                     ),
-                  ),
-                  child: const Text(
-                    "Confirm Order",
-                    style: TextStyle(fontSize: 18),
+                  );
+                },
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Total: \$${totalPrice.toStringAsFixed(2)}',
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 16),
+            Center(
+              child: ElevatedButton(
+                onPressed: _placeOrder,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF8EA7E9),
+                  padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 40),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
                   ),
                 ),
+                child: const Text(
+                  'Confirm Order',
+                  style: TextStyle(fontSize: 18, color: Colors.white),
+                ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
-    );
-  }
-
-  Widget _buildReadOnlyField(String label, String value) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(fontSize: 16, color: Color(0xFF8EA7E9)),
-        ),
-        const SizedBox(height: 8),
-        Container(
-          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-          decoration: BoxDecoration(
-            color: const Color(0xFFF9FAFB),
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: const Color(0xFFD1D5DB)),
-          ),
-          child: Text(
-            value.isNotEmpty ? value : "Not provided",
-            style: const TextStyle(fontSize: 16, color: Color(0xFF374151)),
-          ),
-        ),
-        const SizedBox(height: 16),
-      ],
-    );
-  }
-
-  Widget _buildEditableField(
-      String label, String value, ValueChanged<String> onChanged) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(fontSize: 16, color: Color(0xFF6B7280)),
-        ),
-        const SizedBox(height: 8),
-        TextFormField(
-          initialValue: value,
-          onChanged: onChanged,
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: const Color(0xFFF9FAFB),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20),
-              borderSide: const BorderSide(color: Color(0xFFD1D5DB)),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: Color(0xFF8EA7E9)),
-            ),
-          ),
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return "$label cannot be empty";
-            }
-            return null;
-          },
-        ),
-        const SizedBox(height: 16),
-      ],
     );
   }
 }
