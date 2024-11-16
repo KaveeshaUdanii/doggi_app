@@ -6,7 +6,7 @@ buildscript {
         mavenCentral()  // Central Maven repository
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.0.0'  // Replace with the correct version if needed
+        classpath 'com.android.tools.build:gradle:7.0.4'  // Replace with the correct version if needed
         classpath 'com.google.gms:google-services:4.4.2'  // Add the Google Services Gradle plugin
     }
 }
@@ -19,6 +19,11 @@ allprojects {
 }
 
 rootProject.buildDir = "../build"
+
+//dependencies {
+//    implementation 'com.android.support:support-annotations:28.0.0'
+//
+//}
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
 }

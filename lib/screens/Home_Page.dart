@@ -34,7 +34,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
 
   final List<Widget> bodyPages = [
     const HomeContent(),
-    CartContent(),
+    const CartContent(),
     const StoriesContent(),
     const FavoritesContent(),
     const AccountContent(),

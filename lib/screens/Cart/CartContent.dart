@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'CheckoutPage.dart';
 
 class CartContent extends StatefulWidget {
+  const CartContent({super.key});
+
   @override
   _CartContentState createState() => _CartContentState();
 }
@@ -29,11 +31,11 @@ class _CartContentState extends State<CartContent> {
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
 
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return Center(child: Text('No items in cart',style: TextStyle(
+            return const Center(child: Text('No items in cart',style: TextStyle(
               color: Color(0xFF8EA7E9),
               fontSize: 18.0,
             ),));
@@ -55,11 +57,11 @@ class _CartContentState extends State<CartContent> {
                   itemBuilder: (context, index) {
                     var item = cartItems[index];
                     return Card(
-                      margin: EdgeInsets.all(8.0),
+                      margin: const EdgeInsets.all(8.0),
                       child: ListTile(
-                        contentPadding: EdgeInsets.all(10.0),
+                        contentPadding: const EdgeInsets.all(10.0),
                         leading: Image.network(item['Image'] ?? '', errorBuilder: (context, error, stackTrace) {
-                          return Icon(Icons.error);
+                          return const Icon(Icons.error);
                         }),
                         title: Text(item['F_name'] ?? 'No Name'),
                         subtitle: Text('\$${item['price']}'),
@@ -67,7 +69,7 @@ class _CartContentState extends State<CartContent> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             IconButton(
-                              icon: Icon(Icons.remove),
+                              icon: const Icon(Icons.remove),
                               onPressed: () {
                                 if (item['quantity'] > 1) {
                                   FirebaseFirestore.instance
@@ -81,7 +83,7 @@ class _CartContentState extends State<CartContent> {
                             ),
                             Text(item['quantity'].toString()),
                             IconButton(
-                              icon: Icon(Icons.add),
+                              icon: const Icon(Icons.add),
                               onPressed: () {
                                 FirebaseFirestore.instance
                                     .collection('cart')
@@ -93,7 +95,7 @@ class _CartContentState extends State<CartContent> {
                             ),
                             // Delete Button
                             IconButton(
-                              icon: Icon(Icons.delete),
+                              icon: const Icon(Icons.delete),
                               onPressed: () {
                                 FirebaseFirestore.instance
                                     .collection('cart')
@@ -109,14 +111,14 @@ class _CartContentState extends State<CartContent> {
                 ),
               ),
               Container(
-                padding: EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(16.0),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   boxShadow: [
                     BoxShadow(
                       blurRadius: 5.0,
                       color: Colors.black.withOpacity(0.1),
-                      offset: Offset(0, -2),
+                      offset: const Offset(0, -2),
                     ),
                   ],
                 ),
@@ -126,33 +128,33 @@ class _CartContentState extends State<CartContent> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Selected Items'),
+                        const Text('Selected Items'),
                         Text('\$${subtotal.toStringAsFixed(2)}'),
                       ],
                     ),
-                    SizedBox(height: 8.0),
+                    const SizedBox(height: 8.0),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Shipping Fee'),
+                        const Text('Shipping Fee'),
                         Text('\$${shippingFee.toStringAsFixed(2)}'),
                       ],
                     ),
-                    Divider(),
+                    const Divider(),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Subtotal', style: TextStyle(
+                        const Text('Subtotal', style: TextStyle(
                           fontSize: 18.0,
                           fontWeight: FontWeight.bold,
                         ),),
-                        Text('\$${(subtotal + shippingFee).toStringAsFixed(2)}', style: TextStyle(
+                        Text('\$${(subtotal + shippingFee).toStringAsFixed(2)}', style: const TextStyle(
                           fontSize: 18.0,
                           fontWeight: FontWeight.bold,
                         ),),
                       ],
                     ),
-                    SizedBox(height: 16.0),
+                    const SizedBox(height: 16.0),
                     Center(
                       child: ElevatedButton(
                         onPressed: () {
@@ -162,14 +164,14 @@ class _CartContentState extends State<CartContent> {
                           );
                         },
                         style: ElevatedButton.styleFrom(
-                          padding: EdgeInsets.symmetric(vertical: 14.0, horizontal: 40.0),
-                          backgroundColor: Color(0xFF8EA7E9),
+                          padding: const EdgeInsets.symmetric(vertical: 14.0, horizontal: 40.0),
+                          backgroundColor: const Color(0xFF8EA7E9),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20.0),
                           ),
                           elevation: 5.0,
                         ),
-                        child: Text(
+                        child: const Text(
                           'Checkout',
                           style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600, color: Color(0xFFE5E0FF)),
                         ),
